@@ -1,3 +1,8 @@
+export function describe(name: string, callback: () => void) {
+  console.log(name);
+  callback();
+}
+
 export function expect<T>(expected: T) {
   return {
     toBe(result: T) {
@@ -20,3 +25,5 @@ export async function test(
     console.error(error);
   }
 }
+
+export const it = test;
