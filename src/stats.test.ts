@@ -1,5 +1,3 @@
-import { describe, expect, it } from "./test-lib";
-
 import * as stats from "./stats";
 import * as asyncStats from "./stats-async";
 
