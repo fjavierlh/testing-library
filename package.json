@@ -10,6 +10,7 @@
     "compile": "tsc -b",
     "compile:watch": "tsc -b --watch",
     "test": "jest",
+    "test:watch": "jest --watch",
     "check-updates": "ncu -u"
   },
   "devDependencies": {
