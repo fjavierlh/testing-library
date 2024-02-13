@@ -4,4 +4,6 @@ module.exports = {
   testEnvironment: "node",
   verbose: true,
   modulePathIgnorePatterns: ["<rootDir>/lib"],
+  collectCoverage: true,
+  coverageDirectory: "./coverage",
 };
