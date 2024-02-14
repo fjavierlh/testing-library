@@ -43,14 +43,14 @@ describe("fizzBuzz", () => {
     expect(result).toBe(expected);
   });
 
-  test("should return 'fizzbuzz' if received param divisible by 15", () => {
+  test("should return 'fizzbuzz' if received param divisible by 3 and 5", () => {
     const result = fizzBuzz(30);
     const expected = "fizzbuzz";
 
     expect(result).toBe(expected);
   });
 
-  test("should return same stringified number if is not divisible by 3, 5, or 15", () => {
+  test("should return same stringified number if is not divisible by 3 or 5", () => {
     const result = fizzBuzz(4);
     const expected = "4";
 
