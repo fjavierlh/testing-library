@@ -21,6 +21,10 @@ describe("Camel case converter", () => {
     expect(camelCaseConverter("Foo__Bar--Foo")).toBe("FooBarFoo");
   });
 
+  test("should join capitalized words separated by hyphens and spaces", () => {
+    expect(camelCaseConverter("Foo__Bar--Foo Bar")).toBe("FooBarFooBar");
+  });
+
   test("should convert one word to capitalize", () => {
     expect(camelCaseConverter("foo")).toBe("Foo");
   });
