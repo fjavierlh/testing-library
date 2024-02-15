@@ -3,6 +3,6 @@ export function camelCaseConverter(text: string): string {
     return word.charAt(0).toUpperCase() + word.substring(1);
   }
 
-  const words = text.split(/\s|_{1,}|-{1,}/);
+  const words = text.split(/[\s_-]/);
   return words.map(capitalize).join("");
 }
