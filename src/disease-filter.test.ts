@@ -23,8 +23,6 @@ function createCase(diagnosisId: number, patientName: string): any {
 }
 
 describe("Disease filter", () => {
-  beforeEach(() => {});
-
   it("filters cases when several diagnosis filters are applied together", () => {
     const searchCriterion1 = "Vías respiratorias altas";
     const searchCriterion2 = "Cerebro";
