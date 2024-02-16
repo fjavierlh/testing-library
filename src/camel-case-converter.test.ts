@@ -13,10 +13,6 @@ describe("Camel case converter", () => {
     expect(camelCaseConverter("Foo Bar")).toBe("FooBar");
   });
 
-  test("join capitalized words separated by spaces", () => {
-    expect(camelCaseConverter("Foo Bar")).toBe("FooBar");
-  });
-
   test("join capitalized words separated by hyphens", () => {
     expect(camelCaseConverter("Foo__Bar--Foo")).toBe("FooBarFoo");
   });
