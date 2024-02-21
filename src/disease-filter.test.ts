@@ -1,4 +1,4 @@
-import { DiseaseFilter } from "./disease-filter";
+import { Diagnosis, DiseaseFilter, Case } from "./disease-filter";
 
 function createDiagnosis(id: number, location: string): any {
   return {
@@ -22,23 +22,58 @@ function createCase(diagnosisId: number, patientName: string): any {
   };
 }
 
+function casesWithDiagnoses() {
+  let diagnosisId = 0;
+  let diagnoses: Diagnosis[] = [];
+  let cases: Case[] = [];
+
+  const add = (location: string, patientName: string) => {
+    diagnosisId++;
+    diagnoses.push(createDiagnosis(diagnosisId, location));
+    cases.push(createCase(diagnosisId, patientName));
+  };
+
+  const builder = {
+    havingDiagnosisWithLocationAndCaseWithName: (
+      location: string,
+      patientName: string
+    ) => {
+      add(location, patientName);
+      return builder;
+    },
+    build: () => ({ diagnoses: () => diagnoses, cases: () => cases }),
+  };
+
+  return builder;
+}
+
 describe("Disease filter", () => {
   it("filters cases when several diagnosis filters are applied together", () => {
     const searchCriterion1 = "Vías respiratorias altas";
     const searchCriterion2 = "Cerebro";
-    const diagnoses = [
-      createDiagnosis(1, searchCriterion1),
-      createDiagnosis(2, searchCriterion2),
-      createDiagnosis(3, "irrelevant-location"),
-    ];
+
     const expectedPatientName1 = "Chupito";
     const expectedPatientName2 = "Juliana";
-    const cases = [
-      createCase(1, expectedPatientName1),
-      createCase(2, expectedPatientName2),
-      createCase(3, "irrelevant-name"),
-    ];
-    const diseaseFilter = DiseaseFilter.create(cases, diagnoses);
+
+    const fixtures = casesWithDiagnoses()
+      .havingDiagnosisWithLocationAndCaseWithName(
+        searchCriterion1,
+        expectedPatientName1
+      )
+      .havingDiagnosisWithLocationAndCaseWithName(
+        searchCriterion2,
+        expectedPatientName2
+      )
+      .havingDiagnosisWithLocationAndCaseWithName(
+        "irrelevant-location",
+        "irrelevant-name"
+      )
+      .build();
+
+    const diseaseFilter = DiseaseFilter.create(
+      fixtures.cases(),
+      fixtures.diagnoses()
+    );
     diseaseFilter.addFilter("Cerebro");
     diseaseFilter.addFilter("Vías respiratorias altas");
 
