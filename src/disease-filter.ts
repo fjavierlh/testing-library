@@ -3,7 +3,7 @@ type Note = {
   content: "public" | "private";
 };
 
-type Case = {
+export type Case = {
   id: number;
   patientName: string;
   diagnosisId: number;
