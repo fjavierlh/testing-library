@@ -4,6 +4,7 @@ import * as arithmetic from "../arithmetic";
 describe("calculator should", () => {
   test("calls arithmetic add", () => {
     const mockedAdd = jest.spyOn(arithmetic, "add");
+    mockedAdd.mockImplementation(() => 3)
     const result = calculator.doAdd(1, 2);
     expect(mockedAdd).toHaveBeenLastCalledWith(1, 2);
     expect(result).toBe(3);
