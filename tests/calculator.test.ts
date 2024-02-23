@@ -1,5 +1,5 @@
-import * as calculator from "../calculator";
-import * as arithmetic from "../arithmetic";
+import * as arithmetic from "../src/arithmetic";
+import * as calculator from "../src/calculator";
 
 describe("calculator should", () => {
   test("calls arithmetic add", () => {
