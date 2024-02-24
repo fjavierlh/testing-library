@@ -5,46 +5,41 @@ import {
 } from "../../src/surveillance-controller/surveillance-controller";
 
 describe("The video surveillance controller", () => {
+  let sensor: MotionSensor;
+  let recorder: FakeVideoRecorder;
+  let surveillanceController: SurveillanceController;
+
+  beforeEach(() => {
+    sensor = new FakeMotionSensor();
+    recorder = new FakeVideoRecorder();
+    surveillanceController = new SurveillanceController(sensor, recorder);
+  });
+
   test("asks the recorder to start recording when sensor not detect", () => {
-    const sensor = new StubMotionSensorDetectingNoMotion();
-    const recorder = new SpyVideoRecorder();
+    const sensor = new FakeMotionSensor();
+    const recorder = new FakeVideoRecorder();
+    const spyRecorder = jest.spyOn(recorder, "stopRecording");
     const surveillanceController = new SurveillanceController(sensor, recorder);
 
     surveillanceController.recordMotion();
 
-    expect(recorder.stopRecordingCalled).toBeTruthy();
+    expect(spyRecorder).toHaveBeenCalled();
   });
 
   test("asks the recorder to start recording when sensor detects motion", () => {
-    const sensor = new StubMotionSensorDetectingMotion();
-    const recorder = new SpyVideoRecorder();
-    const surveillanceController = new SurveillanceController(sensor, recorder);
+    const spyRecorder = jest.spyOn(recorder, "startRecording");
+    const stubSensor = jest.spyOn(sensor, "isDetectingMotion");
+    stubSensor.mockImplementation(() => true);
 
     surveillanceController.recordMotion();
 
-    expect(recorder.startRecordingCalled).toBeTruthy();
+    expect(spyRecorder).toHaveBeenCalled();
   });
 });
 
-class StubMotionSensorDetectingMotion implements MotionSensor {
-  isDetectingMotion(): boolean {
-    return true;
-  }
-}
-class StubMotionSensorDetectingNoMotion implements MotionSensor {
+class FakeMotionSensor implements MotionSensor {
   isDetectingMotion(): boolean {
     return false;
-  }
-}
-
-class SpyVideoRecorder implements VideoRecorder {
-  startRecordingCalled = false;
-  stopRecordingCalled = false;
-  startRecording(): void {
-    this.startRecordingCalled = true;
-  }
-  stopRecording(): void {
-    this.stopRecordingCalled = true;
   }
 }
 
