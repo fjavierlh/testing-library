@@ -15,7 +15,7 @@ describe("The video surveillance controller", () => {
     surveillanceController = new SurveillanceController(sensor, recorder);
   });
 
-  test("asks the recorder to start recording when sensor not detect", () => {
+  test("asks the recorder to stop recording when sensor not detect", () => {
     const sensor = new FakeMotionSensor();
     const recorder = new FakeVideoRecorder();
     const spyRecorder = jest.spyOn(recorder, "stopRecording");
@@ -30,6 +30,18 @@ describe("The video surveillance controller", () => {
     const spyRecorder = jest.spyOn(recorder, "startRecording");
     const stubSensor = jest.spyOn(sensor, "isDetectingMotion");
     stubSensor.mockImplementation(() => true);
+
+    surveillanceController.recordMotion();
+
+    expect(spyRecorder).toHaveBeenCalled();
+  });
+
+  test("asks the recorder to start recording when the sensor thrown an unexpected error", () => {
+    const spyRecorder = jest.spyOn(recorder, "stopRecording");
+    const stubSensor = jest.spyOn(sensor, "isDetectingMotion");
+    stubSensor.mockImplementation(() => {
+      throw new Error("Unknown error");
+    });
 
     surveillanceController.recordMotion();
 

@@ -24,9 +24,11 @@ export class SurveillanceController {
   }
 
   recordMotion() {
-    if (this.motionSensor.isDetectingMotion()) {
-      this.videoRecorder.startRecording();
-    } else {
+    try {
+      this.motionSensor.isDetectingMotion()
+        ? this.videoRecorder.startRecording()
+        : this.videoRecorder.stopRecording();
+    } catch (error) {
       this.videoRecorder.stopRecording();
     }
   }
