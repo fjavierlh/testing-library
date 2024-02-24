@@ -6,40 +6,45 @@ import {
 
 describe("The video surveillance controller", () => {
   test("asks the recorder to start recording when sensor not detect", () => {
-    let called = false;
-    const saveCall = () => {
-      called = true;
-    };
-    const sensor = new FakeMotionSensor();
-    const recorder = new FakeVideoRecorder();
-    recorder.stopRecording = saveCall;
+    const sensor = new StubMotionSensorDetectingNoMotion();
+    const recorder = new SpyVideoRecorder();
     const surveillanceController = new SurveillanceController(sensor, recorder);
 
     surveillanceController.recordMotion();
 
-    expect(called).toBeTruthy();
+    expect(recorder.stopRecordingCalled).toBeTruthy();
   });
 
   test("asks the recorder to start recording when sensor detects motion", () => {
-    let called = false;
-    const saveCall = () => {
-      called = true;
-    };
-    const sensor = new FakeMotionSensor();
-    sensor.isDetectingMotion = () => true;
-    const recorder = new FakeVideoRecorder();
-    recorder.startRecording = saveCall;
+    const sensor = new StubMotionSensorDetectingMotion();
+    const recorder = new SpyVideoRecorder();
     const surveillanceController = new SurveillanceController(sensor, recorder);
 
     surveillanceController.recordMotion();
 
-    expect(called).toBeTruthy();
+    expect(recorder.startRecordingCalled).toBeTruthy();
   });
 });
 
-class FakeMotionSensor implements MotionSensor {
+class StubMotionSensorDetectingMotion implements MotionSensor {
+  isDetectingMotion(): boolean {
+    return true;
+  }
+}
+class StubMotionSensorDetectingNoMotion implements MotionSensor {
   isDetectingMotion(): boolean {
     return false;
+  }
+}
+
+class SpyVideoRecorder implements VideoRecorder {
+  startRecordingCalled = false;
+  stopRecordingCalled = false;
+  startRecording(): void {
+    this.startRecordingCalled = true;
+  }
+  stopRecording(): void {
+    this.stopRecordingCalled = true;
   }
 }
 
