@@ -1,9 +1,3 @@
-/**
-Indica al grabador que detenga la grabación cuando el sensor no detecta movimiento.
-Indica al grabador que comience la grabación cuando el sensor detecta movimiento.
-Indica al grabador que detenga la grabación cuando el sensor arroja un error inesperado.
-Comprueba el estado del sensor de movimiento una vez por segundo.
- */
 export interface MotionSensor {
   isDetectingMotion(): boolean;
 }
@@ -23,13 +17,32 @@ export class SurveillanceController {
     this.videoRecorder = videoRecorder;
   }
 
-  recordMotion() {
+  recordMotion(numberOfSeconds = 1) {
+    this.range(numberOfSeconds).forEach(() => {
+      this.tryToRecordMotion();
+      this.wait();
+    });
+  }
+
+  private range(length = 1) {
+    return Array.from({ length }, (_, i) => i);
+  }
+
+  private tryToRecordMotion() {
     try {
       this.motionSensor.isDetectingMotion()
         ? this.videoRecorder.startRecording()
         : this.videoRecorder.stopRecording();
     } catch (error) {
       this.videoRecorder.stopRecording();
+    }
+  }
+
+  private wait(milliseconds = 1000) {
+    let startTime = new Date().getTime();
+    const endTime = new Date().getTime() + milliseconds;
+    while (startTime < endTime) {
+      startTime = new Date().getTime();
     }
   }
 }
