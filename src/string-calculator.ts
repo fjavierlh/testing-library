@@ -15,7 +15,7 @@ export function stringCalculator(expression: string | null): any {
   }
 
   const tokens = expression.split(separator);
-  return tokens.map(getNumber).reduce(sum);
+  return tokens.map(getNumberFrom).reduce(sum);
 }
 
 function removeConfigFrom(expression: string, endOfConfig: string) {
@@ -37,7 +37,7 @@ function sum(previousNumber: number, currentNumber: number): number {
   return previousNumber + currentNumber;
 }
 
-function getNumber(token: string): number {
+function getNumberFrom(token: string): number {
   const parsedToken = Number(token);
   return isNaN(parsedToken) ? nothingToAdd : parsedToken;
 }
