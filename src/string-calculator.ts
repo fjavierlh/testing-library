@@ -1,14 +1,43 @@
+const nothingToAdd = 0
+
 export function stringCalculator(expression: string | null): any {
   if (!expression) {
-    return 0;
+    return nothingToAdd;
   }
-  if (expression.includes(",")) {
-    const numbers = expression.split(",");
-    return numbers
-      .map(Number)
-      .reduce(
-        (previousNumber, currentNumber) => previousNumber + currentNumber
-      );
+
+  const beginningOfConfig = "//";
+  const endOfConfig = "/";
+  let separator = ",";
+
+  if (expression.startsWith(beginningOfConfig)) {
+    separator = getSeparator(expression, beginningOfConfig, endOfConfig);
+    expression = removeConfigFrom(expression, endOfConfig);
   }
-  return Number(expression);
+
+  const tokens = expression.split(separator);
+  return tokens.map(getNumber).reduce(sum);
+}
+
+function removeConfigFrom(expression: string, endOfConfig: string) {
+  return expression.slice(expression.lastIndexOf(endOfConfig) + 1);
+}
+
+function getSeparator(
+  expression: string,
+  beginningOfConfig: string,
+  endOfConfig: string
+) {
+  return expression.slice(
+    beginningOfConfig.length,
+    expression.lastIndexOf(endOfConfig)
+  );
+}
+
+function sum(previousNumber: number, currentNumber: number): number {
+  return previousNumber + currentNumber;
+}
+
+function getNumber(token: string): number {
+  const parsedToken = Number(token);
+  return isNaN(parsedToken) ? nothingToAdd : parsedToken;
 }
