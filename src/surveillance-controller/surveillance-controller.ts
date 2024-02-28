@@ -20,7 +20,7 @@ export class SurveillanceController {
   recordMotion(numberOfSeconds = 1) {
     this.range(numberOfSeconds).forEach(() => {
       this.tryToRecordMotion();
-      this.wait();
+      this.wait(numberOfSeconds * 1000);
     });
   }
 
