@@ -1,4 +1,4 @@
-import { camelCaseConverter } from "./camel-case-converter";
+import { camelCaseConverter } from "../src/camel-case-converter";
 
 describe("Camel case converter", () => {
   test("allow empty text", () => {

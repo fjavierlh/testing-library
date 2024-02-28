@@ -1,4 +1,4 @@
-import { Diagnosis, DiseaseFilter, Case } from "./disease-filter";
+import { Diagnosis, DiseaseFilter, Case } from "../src/disease-filter";
 
 function createDiagnosis(id: number, location: string): any {
   return {

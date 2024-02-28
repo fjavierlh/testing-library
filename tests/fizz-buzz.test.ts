@@ -1,4 +1,4 @@
-import { fizzBuzz } from "./fizz-buzz";
+import { fizzBuzz } from "../src/fizz-buzz";
 
 describe("fizzBuzz", () => {
   test("should return '1' if received param is 1", () => {

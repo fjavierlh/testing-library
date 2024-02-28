@@ -1,4 +1,4 @@
-import * as stats from "./stats";
+import * as stats from "../src/stats";
 
 describe("Stats should", () => {
   it("calculates the sum of all elements of the array", () => {

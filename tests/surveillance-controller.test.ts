@@ -2,7 +2,7 @@ import {
   MotionSensor,
   SurveillanceController,
   VideoRecorder,
-} from "../../src/surveillance-controller/surveillance-controller";
+} from "../src/surveillance-controller";
 
 describe("The video surveillance controller", () => {
   let sensor: MotionSensor;

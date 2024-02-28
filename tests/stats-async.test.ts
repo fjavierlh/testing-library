@@ -1,4 +1,4 @@
-import * as asyncStats from "./stats-async";
+import * as asyncStats from "../src/stats-async";
 
 describe("Async stats should", () => {
   it("calculates the async um of all elements of the array", async () => {
