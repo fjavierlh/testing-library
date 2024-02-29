@@ -1,5 +1,5 @@
 export class PasswordValidator {
   public execute(password: string): boolean {
-    return true;
+    return password.length >= 6;
   }
 }
