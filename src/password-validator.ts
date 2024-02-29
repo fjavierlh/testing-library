@@ -1,5 +1,6 @@
 export class PasswordValidator {
   public execute(password: string): boolean {
-    return password.length >= 6;
+    const minimumPasswordLength = 6;
+    return password.length >= minimumPasswordLength;
   }
 }
