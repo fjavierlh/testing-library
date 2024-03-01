@@ -39,6 +39,17 @@ describe("The password validator", () => {
     expect(validator.execute(invalidPassword)).toBe(false);
     expect(validator.execute(validPassword)).toBe(true);
   });
+
+  it("checks that a password contains at least one lower case letter", () => {
+    bypassIrrelevantPrivateMethodsForUseCase("containsLowerCaseLetter");
+    const validPassword = "";
+    const invalidPassword = "a";
+
+    const validator = new PasswordValidator();
+
+    expect(validator.execute(invalidPassword)).toBe(false);
+    expect(validator.execute(validPassword)).toBe(true);
+  });
 });
 
 function bypassIrrelevantPrivateMethodsForUseCase(useCaseMethod: string): void {
