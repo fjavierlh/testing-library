@@ -78,9 +78,11 @@ function bypassIrrelevantPrivateMethodsForUseCase(useCaseMethod: string): void {
     .map(String);
 
   methodsForStubs.forEach((method) => {
-    jest
-      .spyOn(PasswordValidator.prototype as any, method)
-      .mockImplementation(() => true);
+    const privateMethodSpy = jest.spyOn(
+      PasswordValidator.prototype as any,
+      method
+    );
+    privateMethodSpy.mockImplementation(() => true);
   });
 
   function isMethodForStub(method: string | symbol) {
