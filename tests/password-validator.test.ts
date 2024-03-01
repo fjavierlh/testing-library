@@ -1,15 +1,30 @@
 import { PasswordValidator } from "../src/password-validator";
 
 describe("The password validator", () => {
-  test("validate that a password has the allowed minimum characters", () => {
-    const validator = new PasswordValidator();
-    expect(validator.execute("123456")).toBeTruthy();
-    expect(validator.execute("12345")).toBeFalsy();
-  });
+  const validPassword = "1_Abcd";
+  const invalidPassword = "abcde";
 
-  test("checks that a password contains at least one digit", () => {
-    const validator = new PasswordValidator();
-    expect(validator.execute("abcde")).toBeFalsy();
-    expect(validator.execute("1_Abcd")).toBeTruthy();
-  });
+  it.each`
+    password           | expected
+    ${validPassword}   | ${true}
+    ${invalidPassword} | ${false}
+  `(
+    "checks that a password has the allowed minimum characters",
+    ({ password, expected }) => {
+      const validator = new PasswordValidator();
+      expect(validator.execute(password)).toBe(expected);
+    }
+  );
+
+  it.each`
+    password           | expected
+    ${validPassword}   | ${true}
+    ${invalidPassword} | ${false}
+  `(
+    "checks that a password contains at least one digit",
+    ({ password, expected }) => {
+      const validator = new PasswordValidator();
+      expect(validator.execute(password)).toBe(expected);
+    }
+  );
 });
