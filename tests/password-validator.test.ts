@@ -29,7 +29,7 @@ describe("The password validator", () => {
     expect(validator.execute(validPassword)).toBe(true);
   });
 
-  it("checks that a password contains at least one capital letter", () => {
+  it("checks that a password contains at least one upper case letter", () => {
     bypassIrrelevantPrivateMethodsForUseCase("containsCapitalLetter");
     const validPassword = "A";
     const invalidPassword = "a";
