@@ -74,7 +74,6 @@ describe("The password validator", () => {
 });
 
 function bypassIrrelevantPrivateMethodsForUseCase(useCaseMethod: string): void {
-  const excludedMethodsForStubs = ["constructor", "execute"];
   const methodsForStubs = Reflect.ownKeys(PasswordValidator.prototype)
     .filter(isMethodForStub)
     .map(String);
@@ -86,8 +85,8 @@ function bypassIrrelevantPrivateMethodsForUseCase(useCaseMethod: string): void {
   });
 
   function isMethodForStub(method: string | symbol) {
-    return ![useCaseMethod, ...excludedMethodsForStubs].includes(
-      method.toString()
-    );
+    const excludedMethodsForStubs = ["constructor", "execute"];
+    const methodName = method.toString();
+    return ![useCaseMethod, ...excludedMethodsForStubs].includes(methodName);
   }
 }
