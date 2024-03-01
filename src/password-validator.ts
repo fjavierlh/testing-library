@@ -1,6 +1,4 @@
 export class PasswordValidator {
-  minimumPasswordLength = 6;
-
   public execute(password: string): boolean {
     return [
       this.hasMinimumLength(password),
@@ -12,7 +10,8 @@ export class PasswordValidator {
   }
 
   private hasMinimumLength(password: string): boolean {
-    return password.length >= this.minimumPasswordLength;
+    const minimumPasswordLength = 6;
+    return password.length >= minimumPasswordLength;
   }
 
   private hasDigit(password: string): boolean {
