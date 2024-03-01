@@ -21,11 +21,11 @@ export class PasswordValidator {
   }
 
   private containsUpperCaseLetter(password: string): boolean {
-    return password !== password.toLowerCase();
+    return /[A-Z]/.test(password);
   }
 
   private containsLowerCaseLetter(password: string): boolean {
-    return password !== password.toLocaleUpperCase();
+    return /[a-z]/.test(password);
   }
 
   private containsUnderscoreCharacter(password: string): boolean {
