@@ -50,6 +50,17 @@ describe("The password validator", () => {
     expect(validator.execute(invalidPassword)).toBe(false);
     expect(validator.execute(validPassword)).toBe(true);
   });
+
+  it("checks that a password contains at least one underscore character", () => {
+    bypassIrrelevantPrivateMethodsForUseCase("containsUnderscoreCharacter");
+    const validPassword = "_";
+    const invalidPassword = "a";
+
+    const validator = new PasswordValidator();
+
+    expect(validator.execute(invalidPassword)).toBe(false);
+    expect(validator.execute(validPassword)).toBe(true);
+  });
 });
 
 function bypassIrrelevantPrivateMethodsForUseCase(useCaseMethod: string): void {
