@@ -1,10 +1,23 @@
 export class PasswordValidator {
-  public execute(password: string): boolean {
-    const minimumPasswordLength = 6;
-    const containsDigit = password.match(/\d/);
+  minimumPasswordLength = 6;
 
-    return [containsDigit, password.length >= minimumPasswordLength].every(
-      Boolean
-    );
+  public execute(password: string): boolean {
+    return [
+      this.hasMinimumLength(password),
+      this.hasDigit(password),
+      this.containsCapitalLetter(password),
+    ].every(Boolean);
+  }
+
+  private hasMinimumLength(password: string): boolean {
+    return password.length >= this.minimumPasswordLength;
+  }
+
+  private hasDigit(password: string): boolean {
+    return /\d/.test(password);
+  }
+
+  private containsCapitalLetter(password: string): boolean {
+    return password !== password.toLowerCase();
   }
 }
