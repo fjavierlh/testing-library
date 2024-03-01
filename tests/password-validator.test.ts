@@ -5,6 +5,16 @@ describe("The password validator", () => {
     jest.restoreAllMocks();
   });
 
+  it("checks if password complies with all rules", () => {
+    const validPassword = "1234_ABCDabcd";
+    const invalidPassword = "abcd-";
+
+    const validator = new PasswordValidator();
+
+    expect(validator.execute(invalidPassword)).toBe(false);
+    expect(validator.execute(validPassword)).toBe(true);
+  });
+
   it("checks that a password has the allowed minimum characters", () => {
     bypassIrrelevantPrivateMethodsForUseCase("hasMinimumLength");
     const minimumLength = 6;
