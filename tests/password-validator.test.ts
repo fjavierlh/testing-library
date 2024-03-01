@@ -14,7 +14,7 @@ describe("The password validator", () => {
     expect(validator.execute(validPassword)).toBe(true);
   });
 
-  it("checks that a password has the allowed minimum characters", () => {
+  it("checks if password has the allowed minimum characters", () => {
     bypassIrrelevantPrivateMethodsForUseCase("hasMinimumLength");
     const minimumLength = 6;
     const incorrectLength = 5;
@@ -27,7 +27,7 @@ describe("The password validator", () => {
     expect(validator.execute(validPassword)).toBe(true);
   });
 
-  it("checks that a password contains at least one digit", () => {
+  it("checks if password contains at least one digit", () => {
     bypassIrrelevantPrivateMethodsForUseCase("hasDigit");
     const validPassword = `1${irrelevantChar}`;
     const invalidPassword = `a${irrelevantChar}`;
@@ -38,7 +38,7 @@ describe("The password validator", () => {
     expect(validator.execute(validPassword)).toBe(true);
   });
 
-  it("checks that a password contains at least one upper case letter", () => {
+  it("checks if password contains at least one upper case letter", () => {
     bypassIrrelevantPrivateMethodsForUseCase("containsUpperCaseLetter");
     const validPassword = `A${irrelevantChar}`;
     const invalidPassword = `a${irrelevantChar}`;
@@ -49,7 +49,7 @@ describe("The password validator", () => {
     expect(validator.execute(validPassword)).toBe(true);
   });
 
-  it("checks that a password contains at least one lower case letter", () => {
+  it("checks if password contains at least one lower case letter", () => {
     bypassIrrelevantPrivateMethodsForUseCase("containsLowerCaseLetter");
     const validPassword = `a${irrelevantChar}`;
     const invalidPassword = `A${irrelevantChar}`;
@@ -60,7 +60,7 @@ describe("The password validator", () => {
     expect(validator.execute(validPassword)).toBe(true);
   });
 
-  it("checks that a password contains at least one underscore character", () => {
+  it("checks if password contains at least one underscore character", () => {
     bypassIrrelevantPrivateMethodsForUseCase("containsUnderscoreCharacter");
     const validPassword = `_${irrelevantChar}`;
     const invalidPassword = `*${irrelevantChar}`;
