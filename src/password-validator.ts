@@ -1,12 +1,14 @@
 export class PasswordValidator {
   public execute(password: string): boolean {
     return [
-      this.hasMinimumLength(password),
-      this.hasDigit(password),
-      this.containsUpperCaseLetter(password),
-      this.containsLowerCaseLetter(password),
-      this.containsUnderscoreCharacter(password),
-    ].every(Boolean);
+      this.hasMinimumLength,
+      this.hasDigit,
+      this.containsUpperCaseLetter,
+      this.containsLowerCaseLetter,
+      this.containsUnderscoreCharacter,
+    ]
+      .map((checkFn) => checkFn(password))
+      .every(Boolean);
   }
 
   private hasMinimumLength(password: string): boolean {
