@@ -5,7 +5,7 @@ export class PasswordValidator {
     return [
       this.hasMinimumLength(password),
       this.hasDigit(password),
-      this.containsCapitalLetter(password),
+      this.containsUpperCaseLetter(password),
     ].every(Boolean);
   }
 
@@ -17,7 +17,7 @@ export class PasswordValidator {
     return /\d/.test(password);
   }
 
-  private containsCapitalLetter(password: string): boolean {
+  private containsUpperCaseLetter(password: string): boolean {
     return password !== password.toLowerCase();
   }
 }

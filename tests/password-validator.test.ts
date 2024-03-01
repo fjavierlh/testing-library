@@ -30,7 +30,7 @@ describe("The password validator", () => {
   });
 
   it("checks that a password contains at least one upper case letter", () => {
-    bypassIrrelevantPrivateMethodsForUseCase("containsCapitalLetter");
+    bypassIrrelevantPrivateMethodsForUseCase("containsUpperCaseLetter");
     const validPassword = "A";
     const invalidPassword = "a";
 
