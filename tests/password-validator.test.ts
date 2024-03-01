@@ -76,15 +76,18 @@ describe("The password validator", () => {
 function bypassIrrelevantPrivateMethodsForUseCase(useCaseMethod: string): void {
   const excludedMethodsForStubs = ["constructor", "execute"];
   const methodsForStubs = Reflect.ownKeys(PasswordValidator.prototype)
-    .filter(
-      (method) =>
-        ![useCaseMethod, ...excludedMethodsForStubs].includes(method as string)
-    )
+    .filter(isMethodForStub)
     .map(String);
-    
+
   methodsForStubs.forEach((method) => {
     jest
       .spyOn(PasswordValidator.prototype as any, method)
       .mockImplementation(() => true);
   });
+
+  function isMethodForStub(method: string | symbol) {
+    return ![useCaseMethod, ...excludedMethodsForStubs].includes(
+      method.toString()
+    );
+  }
 }

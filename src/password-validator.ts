@@ -7,7 +7,7 @@ export class PasswordValidator {
       this.containsLowerCaseLetter,
       this.containsUnderscoreCharacter,
     ]
-      .map((checkFn) => checkFn(password))
+      .map((isValid) => isValid(password))
       .every(Boolean);
   }
 
