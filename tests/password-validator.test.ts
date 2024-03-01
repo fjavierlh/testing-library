@@ -6,4 +6,10 @@ describe("The password validator", () => {
     expect(validator.execute("123456")).toBeTruthy();
     expect(validator.execute("12345")).toBeFalsy();
   });
+
+  test("checks that a password contains at least one digit", () => {
+    const validator = new PasswordValidator();
+    expect(validator.execute("abcde")).toBeFalsy();
+    expect(validator.execute("1_Abcd")).toBeTruthy();
+  });
 });
