@@ -42,8 +42,8 @@ describe("The password validator", () => {
 
   it("checks that a password contains at least one lower case letter", () => {
     bypassIrrelevantPrivateMethodsForUseCase("containsLowerCaseLetter");
-    const validPassword = "";
-    const invalidPassword = "a";
+    const validPassword = "a";
+    const invalidPassword = "A";
 
     const validator = new PasswordValidator();
 
