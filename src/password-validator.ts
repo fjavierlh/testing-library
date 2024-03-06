@@ -31,10 +31,6 @@ export class PasswordValidator {
   }
 }
 
-function pipe(...validationFns: Function[]): Function {
-  return (password: string) =>
-    validationFns.reduce(
-      (isValid, validate) => validate(password) && isValid,
-      true
-    );
+function pipe(...fns: Function[]): Function {
+  return (arg: unknown) => fns.reduce((v, fn) => fn(arg) && v, true);
 }
