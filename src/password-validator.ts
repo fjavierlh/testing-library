@@ -1,14 +1,12 @@
 export class PasswordValidator {
-  public execute(password: string): boolean {
-    return [
+  public validate(password: string): boolean {
+    return pipe(
       this.hasMinimumLength,
       this.hasDigit,
       this.containsUpperCaseLetter,
       this.containsLowerCaseLetter,
-      this.containsUnderscoreCharacter,
-    ]
-      .map((isValid) => isValid(password))
-      .every(Boolean);
+      this.containsUnderscoreCharacter
+    )(password);
   }
 
   private hasMinimumLength(password: string): boolean {
@@ -31,4 +29,12 @@ export class PasswordValidator {
   private containsUnderscoreCharacter(password: string): boolean {
     return password.includes("_");
   }
+}
+
+function pipe(...validationFns: Function[]): Function {
+  return (password: string) =>
+    validationFns.reduce(
+      (isValid, validate) => validate(password) && isValid,
+      true
+    );
 }
