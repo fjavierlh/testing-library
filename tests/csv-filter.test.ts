@@ -46,6 +46,9 @@ Num _factura, Fecha,      Bruto, Neto, IVA, IGIC, Concepto,    CIF_cliente, NIF_
 7. Un fichero que contiene una sola línea es incorrecto si no tiene cabecera
 
  */
+
+import CSVFilter from "../src/csv-filter";
+
 describe("The CSV filter", () => {
   it("allows correct lines", () => {
     const header =
@@ -55,6 +58,6 @@ describe("The CSV filter", () => {
     const csvFilter = new CSVFilter([header, invoiceLine]);
     const result = csvFilter.filteredLines;
 
-    expect(result).toBe([header, invoiceLine]);
+    expect(result).toEqual([header, invoiceLine]);
   });
 });
