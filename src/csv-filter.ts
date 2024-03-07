@@ -6,6 +6,13 @@ class CSVFilter {
   }
 
   get filteredLines(): string[] {
+    const [header, invoice] = this.lines;
+    const [, , , , IVAtax, IGICtax] = invoice.split(",");
+
+    if ([IGICtax, IVAtax].every(Boolean)) {
+      return [header];
+    }
+
     return this.lines;
   }
 }
