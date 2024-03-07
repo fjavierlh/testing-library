@@ -60,4 +60,15 @@ describe("The CSV filter", () => {
 
     expect(result).toEqual([header, invoiceLine]);
   });
+
+  it("removes invoice line if has excluyent taxes", () => {
+    const header =
+      "Num _factura, Fecha, Bruto, Neto, IVA, IGIC, Concepto, CIF_cliente, NIF_cliente";
+    const invoiceLine = "1,02/05/2021,1000,790,21,10,ACER Laptop,B76430134,";
+
+    const csvFilter = CSVFilter.create([header, invoiceLine]);
+    const result = csvFilter.filteredLines;
+
+    expect(result).toEqual([header]);
+  });
 });
