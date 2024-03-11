@@ -71,4 +71,15 @@ describe("The CSV filter", () => {
 
     expect(result).toEqual([header]);
   });
+
+  it("removes invoice line if both taxes are not present", () => {
+    const header =
+      "Num _factura, Fecha, Bruto, Neto, IVA, IGIC, Concepto, CIF_cliente, NIF_cliente";
+    const invoiceLine = "1,02/05/2021,1000,790,,,ACER Laptop,B76430134,";
+
+    const csvFilter = CSVFilter.create([header, invoiceLine]);
+    const result = csvFilter.filteredLines;
+
+    expect(result).toEqual([header]);
+  });
 });
