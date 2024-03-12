@@ -22,7 +22,10 @@ class CSVFilter {
     const [, , , , IVAtax, IGICtax] = this.extractFieldsFrom(invoice);
     const hasSomeTax = Boolean(IVAtax || IGICtax);
     const hasBothTaxes = Boolean(IVAtax && IGICtax);
-    const someTaxIsNotADecimal = [IVAtax, IGICtax].some((tax) => tax.match(/^\d/));
+    const isDecimalRegEx = /^\d*$/;
+    const someTaxIsNotADecimal = [IVAtax, IGICtax]
+      .filter(Boolean)
+      .some((tax) => isDecimalRegEx.test(tax));
 
     return hasSomeTax && !hasBothTaxes && someTaxIsNotADecimal;
   }
