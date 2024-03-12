@@ -17,7 +17,7 @@ Num _factura, Fecha, Bruto, Neto, IVA, IGIC, Concepto, CIF_cliente, NIF_cliente
 
 /**
  * Test cases
-1. Un fichero correcto con una sola factura donde todos los datos son correctos produce la misma línea
+(x) 1. Un fichero correcto con una sola factura donde todos los datos son correctos produce la misma línea
 Num _factura, Fecha, Bruto, Neto, IVA, IGIC, Concepto, CIF_cliente, NIF_cliente
 1,02/05/2019,1008,810,19,,ACERLaptop,B76430134,
 
@@ -50,10 +50,12 @@ Num _factura, Fecha,      Bruto, Neto, IVA, IGIC, Concepto,    CIF_cliente, NIF_
 import CSVFilter from "../src/csv-filter";
 
 describe("The CSV filter", () => {
+  const header =
+    "Num _factura, Fecha, Bruto, Neto, IVA, IGIC, Concepto, CIF_cliente, NIF_cliente";
+  const emtpyField = "";
+
   it("allows correct lines", () => {
-    const header =
-      "Num _factura, Fecha, Bruto, Neto, IVA, IGIC, Concepto, CIF_cliente, NIF_cliente";
-    const invoiceLine = "1,02/05/2021,1000,790,21,,ACER Laptop,B76430134,";
+    const invoiceLine = fileWithOneInvoiceLineHaving("21");
 
     const csvFilter = CSVFilter.create([header, invoiceLine]);
     const result = csvFilter.filteredLines;
@@ -96,11 +98,33 @@ describe("The CSV filter", () => {
   it("removes invoice line if one tax is a decimal number and the other is not", () => {
     const header =
       "Num _factura, Fecha, Bruto, Neto, IVA, IGIC, Concepto, CIF_cliente, NIF_cliente";
-    const invoiceLine = "1,02/05/2021,1000,790,D1,20,ACER Laptop,B76430134,";
+    const invoiceLine = "1,02/05/2021,1000,790,DZ,20,ACER Laptop,B76430134,";
 
     const csvFilter = CSVFilter.create([header, invoiceLine]);
     const result = csvFilter.filteredLines;
 
     expect(result).toEqual([header]);
   });
+
+  function fileWithOneInvoiceLineHaving(IVATax = "21", IGICTax = emtpyField) {
+    const invoiceId = "1";
+    const invoiceDate = "02/05/2021";
+    const grossAmount = "1000";
+    const netAmount = "790";
+    const concept = "ACER Laptop";
+    const cif = "B76430134";
+    const nif = emtpyField;
+
+    return [
+      invoiceId,
+      invoiceDate,
+      grossAmount,
+      netAmount,
+      IVATax,
+      IGICTax,
+      concept,
+      cif,
+      nif,
+    ].join();
+  }
 });
