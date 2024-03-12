@@ -55,7 +55,7 @@ describe("The CSV filter", () => {
   const emtpyField = "";
 
   it("allows correct lines", () => {
-    const invoiceLine = fileWithOneInvoiceLineHaving("21");
+    const invoiceLine = fileWithOneInvoiceLineHaving();
 
     const csvFilter = CSVFilter.create([header, invoiceLine]);
     const result = csvFilter.filteredLines;
@@ -66,7 +66,7 @@ describe("The CSV filter", () => {
   it("removes invoice line if has excluyent taxes", () => {
     const header =
       "Num _factura, Fecha, Bruto, Neto, IVA, IGIC, Concepto, CIF_cliente, NIF_cliente";
-    const invoiceLine = "1,02/05/2021,1000,790,21,10,ACER Laptop,B76430134,";
+    const invoiceLine = fileWithOneInvoiceLineHaving("21", "7");
 
     const csvFilter = CSVFilter.create([header, invoiceLine]);
     const result = csvFilter.filteredLines;
@@ -77,7 +77,7 @@ describe("The CSV filter", () => {
   it("removes invoice line if both taxes are not present", () => {
     const header =
       "Num _factura, Fecha, Bruto, Neto, IVA, IGIC, Concepto, CIF_cliente, NIF_cliente";
-    const invoiceLine = "1,02/05/2021,1000,790,,,ACER Laptop,B76430134,";
+    const invoiceLine = fileWithOneInvoiceLineHaving("", "");
 
     const csvFilter = CSVFilter.create([header, invoiceLine]);
     const result = csvFilter.filteredLines;
@@ -88,7 +88,7 @@ describe("The CSV filter", () => {
   it("removes invoice line if tax is not a decimal number", () => {
     const header =
       "Num _factura, Fecha, Bruto, Neto, IVA, IGIC, Concepto, CIF_cliente, NIF_cliente";
-    const invoiceLine = "1,02/05/2021,1000,790,D1,,ACER Laptop,B76430134,";
+    const invoiceLine = fileWithOneInvoiceLineHaving("XYZ");
 
     const csvFilter = CSVFilter.create([header, invoiceLine]);
     const result = csvFilter.filteredLines;
@@ -98,7 +98,7 @@ describe("The CSV filter", () => {
   it("removes invoice line if one tax is a decimal number and the other is not", () => {
     const header =
       "Num _factura, Fecha, Bruto, Neto, IVA, IGIC, Concepto, CIF_cliente, NIF_cliente";
-    const invoiceLine = "1,02/05/2021,1000,790,DZ,20,ACER Laptop,B76430134,";
+    const invoiceLine = fileWithOneInvoiceLineHaving("XYZ", "7");
 
     const csvFilter = CSVFilter.create([header, invoiceLine]);
     const result = csvFilter.filteredLines;
