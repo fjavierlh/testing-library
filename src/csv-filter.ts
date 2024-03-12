@@ -7,21 +7,23 @@ class CSVFilter {
 
   get filteredLines(): string[] {
     const [header, ...invoicesLines] = this.lines;
-    const filteredInvoices = invoicesLines
-      .filter((invoice) => {
-        const [, , , , IVAtax, IGICtax] = invoice.split(",");
-        const hasBothTaxes = IVAtax && IGICtax;
-
-        return !hasBothTaxes;
-      })
-      .filter((invoice) => {
-        const [, , , , IVAtax, IGICtax] = invoice.split(",");
-        const hasSomeTax = IVAtax || IGICtax;
-        
-        return hasSomeTax;
-      });
+    const filteredInvoices = invoicesLines.filter((invoice) =>
+      this.hasValidTaxes(invoice)
+    );
 
     return [header, ...filteredInvoices];
+  }
+
+  private extractFieldsFrom(invoice: string): string[] {
+    return invoice.split(",");
+  }
+
+  private hasValidTaxes(invoice: string): boolean {
+    const [, , , , IVAtax, IGICtax] = this.extractFieldsFrom(invoice);
+    const hasSomeTax = Boolean(IVAtax || IGICtax);
+    const hasBothTaxes = Boolean(IVAtax && IGICtax);
+
+    return hasSomeTax && !hasBothTaxes;
   }
 }
 
