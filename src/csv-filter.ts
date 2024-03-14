@@ -27,17 +27,12 @@ class CSVFilter {
     const someTaxIsNotADecimal = [IVAtax, IGICtax]
       .filter(Boolean)
       .some((tax) => isDecimalRegEx.test(tax));
-    const netAmountIsCorrectlyCalculated = this.netIsCorrectlyCalculated(
-      netAmount,
-      grossAmount,
-      IVAtax
-    );
 
     return (
       hasSomeTax &&
       !hasBothTaxes &&
       someTaxIsNotADecimal &&
-      netAmountIsCorrectlyCalculated
+      this.netIsCorrectlyCalculated(netAmount, grossAmount, IVAtax)
     );
   }
 
