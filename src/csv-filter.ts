@@ -21,7 +21,8 @@ class CSVFilter {
   private hasValidTaxes(invoice: string): boolean {
     const [, , grossAmount, netAmount, IVAtax, IGICtax] =
       this.extractFieldsFrom(invoice);
-    const hasSomeTax = Boolean(IVAtax || IGICtax);
+    const applicableTax = IVAtax || IGICtax;
+    const hasSomeTax = Boolean(applicableTax);
     const hasBothTaxes = Boolean(IVAtax && IGICtax);
     const isDecimalRegEx = /^\d*$/;
     const someTaxIsNotADecimal = [IVAtax, IGICtax]
@@ -32,7 +33,7 @@ class CSVFilter {
       hasSomeTax &&
       !hasBothTaxes &&
       someTaxIsNotADecimal &&
-      this.netIsCorrectlyCalculated(netAmount, grossAmount, IVAtax || IGICtax)
+      this.netIsCorrectlyCalculated(netAmount, grossAmount, applicableTax)
     );
   }
 
