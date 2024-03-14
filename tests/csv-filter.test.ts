@@ -161,6 +161,19 @@ describe("The CSV filter", () => {
     expect(result).toEqual([header]);
   });
 
+  it("removes invoice line if CIF and NIF are present", () => {
+    const header =
+      "Num _factura, Fecha, Bruto, Neto, IVA, IGIC, Concepto, CIF_cliente, NIF_cliente";
+    const invoiceLine = fileWithOneInvoiceLineHaving({
+      nif: "C1234546",
+    });
+
+    const csvFilter = CSVFilter.create([header, invoiceLine]);
+    const result = csvFilter.filteredLines;
+
+    expect(result).toEqual([header]);
+  });
+
   interface FileWithOneInvoiceLineHavingParams {
     IVATax?: string;
     IGICTax?: string;
