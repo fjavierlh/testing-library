@@ -118,6 +118,17 @@ describe("The CSV filter", () => {
     expect(result).toEqual([header]);
   });
 
+  it("allow invoice line if net amount is correctly calculated for IGIC tax", () => {
+    const header =
+      "Num _factura, Fecha, Bruto, Neto, IVA, IGIC, Concepto, CIF_cliente, NIF_cliente";
+    const invoiceLine = fileWithOneInvoiceLineHaving("", "7", "930");
+
+    const csvFilter = CSVFilter.create([header, invoiceLine]);
+    const result = csvFilter.filteredLines;
+
+    expect(result).toEqual([header, invoiceLine]);
+  });
+
   function fileWithOneInvoiceLineHaving(
     IVATax = "21",
     IGICTax = emtpyField,
