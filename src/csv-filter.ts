@@ -19,15 +19,40 @@ class CSVFilter {
   }
 
   private hasValidTaxes(invoice: string): boolean {
-    const [, , , , IVAtax, IGICtax] = this.extractFieldsFrom(invoice);
+    const [, , grossAmount, netAmount, IVAtax, IGICtax] =
+      this.extractFieldsFrom(invoice);
     const hasSomeTax = Boolean(IVAtax || IGICtax);
     const hasBothTaxes = Boolean(IVAtax && IGICtax);
     const isDecimalRegEx = /^\d*$/;
     const someTaxIsNotADecimal = [IVAtax, IGICtax]
       .filter(Boolean)
       .some((tax) => isDecimalRegEx.test(tax));
+    const netAmountIsCorrectlyCalculated = this.netIsCorrectlyCalculated(
+      netAmount,
+      grossAmount,
+      IVAtax
+    );
 
-    return hasSomeTax && !hasBothTaxes && someTaxIsNotADecimal;
+    return (
+      hasSomeTax &&
+      !hasBothTaxes &&
+      someTaxIsNotADecimal &&
+      netAmountIsCorrectlyCalculated
+    );
+  }
+
+  private netIsCorrectlyCalculated(
+    netAmount: string,
+    grossAmount: string,
+    tax: string
+  ) {
+    const parsedNetAmount = parseFloat(netAmount);
+    const parsedGrossAmount = parseFloat(grossAmount);
+    const parsedTax = parseFloat(tax);
+    return (
+      parsedNetAmount ===
+      parsedGrossAmount - (parsedGrossAmount * parsedTax) / 100
+    );
   }
 }
 
