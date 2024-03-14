@@ -63,6 +63,17 @@ describe("The CSV filter", () => {
     expect(result).toEqual([header, invoiceLine]);
   });
 
+  it("allows invoice line if net amount is correctly calculated for IGIC tax", () => {
+    const header =
+      "Num _factura, Fecha, Bruto, Neto, IVA, IGIC, Concepto, CIF_cliente, NIF_cliente";
+    const invoiceLine = fileWithOneInvoiceLineHaving("", "7", "930");
+
+    const csvFilter = CSVFilter.create([header, invoiceLine]);
+    const result = csvFilter.filteredLines;
+
+    expect(result).toEqual([header, invoiceLine]);
+  });
+
   it("removes invoice line if has excluyent taxes", () => {
     const header =
       "Num _factura, Fecha, Bruto, Neto, IVA, IGIC, Concepto, CIF_cliente, NIF_cliente";
@@ -116,17 +127,6 @@ describe("The CSV filter", () => {
     const result = csvFilter.filteredLines;
 
     expect(result).toEqual([header]);
-  });
-
-  it("allow invoice line if net amount is correctly calculated for IGIC tax", () => {
-    const header =
-      "Num _factura, Fecha, Bruto, Neto, IVA, IGIC, Concepto, CIF_cliente, NIF_cliente";
-    const invoiceLine = fileWithOneInvoiceLineHaving("", "7", "930");
-
-    const csvFilter = CSVFilter.create([header, invoiceLine]);
-    const result = csvFilter.filteredLines;
-
-    expect(result).toEqual([header, invoiceLine]);
   });
 
   function fileWithOneInvoiceLineHaving(
