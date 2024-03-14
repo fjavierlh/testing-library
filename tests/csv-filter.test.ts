@@ -129,6 +129,17 @@ describe("The CSV filter", () => {
     expect(result).toEqual([header]);
   });
 
+  it("removes invoice line if net amount is miscalculated for iva tax", () => {
+    const header =
+      "Num _factura, Fecha, Bruto, Neto, IVA, IGIC, Concepto, CIF_cliente, NIF_cliente";
+    const invoiceLine = fileWithOneInvoiceLineHaving("", "7", "900");
+
+    const csvFilter = CSVFilter.create([header, invoiceLine]);
+    const result = csvFilter.filteredLines;
+
+    expect(result).toEqual([header]);
+  });
+
   function fileWithOneInvoiceLineHaving(
     IVATax = "21",
     IGICTax = emtpyField,
