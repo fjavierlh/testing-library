@@ -32,7 +32,7 @@ class CSVFilter {
       hasSomeTax &&
       !hasBothTaxes &&
       someTaxIsNotADecimal &&
-      this.netIsCorrectlyCalculated(netAmount, grossAmount, IVAtax)
+      this.netIsCorrectlyCalculated(netAmount, grossAmount, IVAtax || IGICtax)
     );
   }
 
