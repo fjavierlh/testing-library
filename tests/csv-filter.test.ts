@@ -21,7 +21,7 @@ Num _factura, Fecha, Bruto, Neto, IVA, IGIC, Concepto, CIF_cliente, NIF_cliente
 Num _factura, Fecha, Bruto, Neto, IVA, IGIC, Concepto, CIF_cliente, NIF_cliente
 1,02/05/2019,1008,810,19,,ACERLaptop,B76430134,
 
-2. Un fichero correcto con una sola factura donde hay IVA y IGIC debería eliminar esa línea
+(x) 2. Un fichero correcto con una sola factura donde hay IVA y IGIC debería eliminar esa línea
 Num _factura, Fecha,      Bruto, Neto, IVA, IGIC, Concepto,    CIF_cliente, NIF_cliente
 1,            02/05/2019, 1008,  810,   19,   21, ACERLaptop,  B76430134,
 
@@ -95,10 +95,11 @@ describe("The CSV filter", () => {
 
     expect(result).toEqual([header]);
   });
+
   it("removes invoice line if one tax is a decimal number and the other is not", () => {
     const header =
       "Num _factura, Fecha, Bruto, Neto, IVA, IGIC, Concepto, CIF_cliente, NIF_cliente";
-    const invoiceLine = fileWithOneInvoiceLineHaving("XYZ", "7");
+    const invoiceLine = fileWithOneInvoiceLineHaving("XYZ", "7cd");
 
     const csvFilter = CSVFilter.create([header, invoiceLine]);
     const result = csvFilter.filteredLines;
@@ -106,11 +107,25 @@ describe("The CSV filter", () => {
     expect(result).toEqual([header]);
   });
 
-  function fileWithOneInvoiceLineHaving(IVATax = "21", IGICTax = emtpyField) {
+  it("removes invoice line if net amount is miscalculated for iva tax", () => {
+    const header =
+      "Num _factura, Fecha, Bruto, Neto, IVA, IGIC, Concepto, CIF_cliente, NIF_cliente";
+    const invoiceLine = fileWithOneInvoiceLineHaving("21", "", "900");
+
+    const csvFilter = CSVFilter.create([header, invoiceLine]);
+    const result = csvFilter.filteredLines;
+
+    expect(result).toEqual([header]);
+  });
+
+  function fileWithOneInvoiceLineHaving(
+    IVATax = "21",
+    IGICTax = emtpyField,
+    netAmount = "790"
+  ) {
     const invoiceId = "1";
     const invoiceDate = "02/05/2021";
     const grossAmount = "1000";
-    const netAmount = "790";
     const concept = "ACER Laptop";
     const cif = "B76430134";
     const nif = emtpyField;
