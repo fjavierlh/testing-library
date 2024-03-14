@@ -55,7 +55,7 @@ describe("The CSV filter", () => {
   const emtpyField = "";
 
   it("allows correct lines", () => {
-    const invoiceLine = fileWithOneInvoiceLineHaving();
+    const invoiceLine = fileWithOneInvoiceLineHaving({});
 
     const csvFilter = CSVFilter.create([header, invoiceLine]);
     const result = csvFilter.filteredLines;
@@ -66,7 +66,11 @@ describe("The CSV filter", () => {
   it("allows invoice line if net amount is correctly calculated for IGIC tax", () => {
     const header =
       "Num _factura, Fecha, Bruto, Neto, IVA, IGIC, Concepto, CIF_cliente, NIF_cliente";
-    const invoiceLine = fileWithOneInvoiceLineHaving("", "7", "930");
+    const invoiceLine = fileWithOneInvoiceLineHaving({
+      IVATax: "",
+      IGICTax: "7",
+      netAmount: "930",
+    });
 
     const csvFilter = CSVFilter.create([header, invoiceLine]);
     const result = csvFilter.filteredLines;
@@ -77,7 +81,10 @@ describe("The CSV filter", () => {
   it("removes invoice line if has excluyent taxes", () => {
     const header =
       "Num _factura, Fecha, Bruto, Neto, IVA, IGIC, Concepto, CIF_cliente, NIF_cliente";
-    const invoiceLine = fileWithOneInvoiceLineHaving("21", "7");
+    const invoiceLine = fileWithOneInvoiceLineHaving({
+      IVATax: "21",
+      IGICTax: "7",
+    });
 
     const csvFilter = CSVFilter.create([header, invoiceLine]);
     const result = csvFilter.filteredLines;
@@ -88,7 +95,10 @@ describe("The CSV filter", () => {
   it("removes invoice line if both taxes are not present", () => {
     const header =
       "Num _factura, Fecha, Bruto, Neto, IVA, IGIC, Concepto, CIF_cliente, NIF_cliente";
-    const invoiceLine = fileWithOneInvoiceLineHaving("", "");
+    const invoiceLine = fileWithOneInvoiceLineHaving({
+      IVATax: "",
+      IGICTax: "",
+    });
 
     const csvFilter = CSVFilter.create([header, invoiceLine]);
     const result = csvFilter.filteredLines;
@@ -99,7 +109,7 @@ describe("The CSV filter", () => {
   it("removes invoice line if tax is not a decimal number", () => {
     const header =
       "Num _factura, Fecha, Bruto, Neto, IVA, IGIC, Concepto, CIF_cliente, NIF_cliente";
-    const invoiceLine = fileWithOneInvoiceLineHaving("XYZ");
+    const invoiceLine = fileWithOneInvoiceLineHaving({ IVATax: "XYZ" });
 
     const csvFilter = CSVFilter.create([header, invoiceLine]);
     const result = csvFilter.filteredLines;
@@ -110,7 +120,10 @@ describe("The CSV filter", () => {
   it("removes invoice line if one tax is a decimal number and the other is not", () => {
     const header =
       "Num _factura, Fecha, Bruto, Neto, IVA, IGIC, Concepto, CIF_cliente, NIF_cliente";
-    const invoiceLine = fileWithOneInvoiceLineHaving("XYZ", "7cd");
+    const invoiceLine = fileWithOneInvoiceLineHaving({
+      IVATax: "XYZ",
+      IGICTax: "7cd",
+    });
 
     const csvFilter = CSVFilter.create([header, invoiceLine]);
     const result = csvFilter.filteredLines;
@@ -121,7 +134,11 @@ describe("The CSV filter", () => {
   it("removes invoice line if net amount is miscalculated for iva tax", () => {
     const header =
       "Num _factura, Fecha, Bruto, Neto, IVA, IGIC, Concepto, CIF_cliente, NIF_cliente";
-    const invoiceLine = fileWithOneInvoiceLineHaving("21", "", "900");
+    const invoiceLine = fileWithOneInvoiceLineHaving({
+      IVATax: "21",
+      IGICTax: "",
+      netAmount: "900",
+    });
 
     const csvFilter = CSVFilter.create([header, invoiceLine]);
     const result = csvFilter.filteredLines;
@@ -132,7 +149,11 @@ describe("The CSV filter", () => {
   it("removes invoice line if net amount is miscalculated for iva tax", () => {
     const header =
       "Num _factura, Fecha, Bruto, Neto, IVA, IGIC, Concepto, CIF_cliente, NIF_cliente";
-    const invoiceLine = fileWithOneInvoiceLineHaving("", "7", "900");
+    const invoiceLine = fileWithOneInvoiceLineHaving({
+      IVATax: "",
+      IGICTax: "7",
+      netAmount: "900",
+    });
 
     const csvFilter = CSVFilter.create([header, invoiceLine]);
     const result = csvFilter.filteredLines;
@@ -140,17 +161,24 @@ describe("The CSV filter", () => {
     expect(result).toEqual([header]);
   });
 
-  function fileWithOneInvoiceLineHaving(
+  interface FileWithOneInvoiceLineHavingParams {
+    IVATax?: string;
+    IGICTax?: string;
+    netAmount?: string;
+    nif?: string;
+  }
+
+  function fileWithOneInvoiceLineHaving({
     IVATax = "21",
     IGICTax = emtpyField,
-    netAmount = "790"
-  ) {
+    netAmount = "790",
+    nif = emtpyField,
+  }: FileWithOneInvoiceLineHavingParams) {
     const invoiceId = "1";
     const invoiceDate = "02/05/2021";
     const grossAmount = "1000";
     const concept = "ACER Laptop";
     const cif = "B76430134";
-    const nif = emtpyField;
 
     return [
       invoiceId,
