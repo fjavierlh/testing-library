@@ -6,6 +6,9 @@ class CSVFilter {
   }
 
   get filteredLines(): string[] {
+    if (this.lines.length === 0) {
+      return [];
+    }
     const [header, ...invoicesLines] = this.lines;
     const validatedInvoices = invoicesLines.filter(this.isValidInvoice);
     const duplicatedIds = this.takeRepeatedIdsFrom(validatedInvoices);
