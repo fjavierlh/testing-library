@@ -7,8 +7,8 @@ class CSVFilter {
 
   get filteredLines(): string[] {
     const [header, ...invoicesLines] = this.lines;
-    const filteredInvoices = invoicesLines.filter(this.isValidInvoice);
-    return [header, ...filteredInvoices];
+    const validatedInvoices = invoicesLines.filter(this.isValidInvoice);
+    return [header, ...validatedInvoices];
   }
 
   private extractFieldsFrom(invoice: string): string[] {
