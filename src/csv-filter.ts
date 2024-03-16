@@ -16,13 +16,9 @@ class CSVFilter {
     const validatedInvoices = invoicesLines.filter(this.isValidInvoice);
     const duplicatedIds = this.takeRepeatedIdsFrom(validatedInvoices);
     const nonRepeatedInvoices = validatedInvoices.filter(
-      (invoice) => !duplicatedIds.includes(invoice.split(",")[0])
+      (invoice) => !duplicatedIds.includes(this.idFrom(invoice))
     );
     return [header, ...nonRepeatedInvoices];
-  }
-
-  private extractFieldsFrom(invoice: string): string[] {
-    return invoice.split(",");
   }
 
   private isValidInvoice = (invoice: string): boolean => {
@@ -31,33 +27,42 @@ class CSVFilter {
     const applicableTax = IVAtax || IGICtax;
     const hasSomeTax = Boolean(applicableTax);
     const hasBothTaxes = Boolean(IVAtax && IGICtax);
-    const isDecimalRegEx = /^\d*$/;
+    const checkDecimalRegEx = /^\d*$/;
     const someTaxIsNotADecimal = [IVAtax, IGICtax]
       .filter(Boolean)
-      .some((tax) => isDecimalRegEx.test(tax));
+      .some((tax) => checkDecimalRegEx.test(tax));
     const hasBothTaxIdNumbers = nif && cif;
+    const hasCorrectAmount = this.hasCorrectAmount(
+      netAmount,
+      grossAmount,
+      applicableTax
+    );
 
     return (
       hasSomeTax &&
       !hasBothTaxes &&
       someTaxIsNotADecimal &&
-      this.netAmountIsCorrectlyCalculated(
-        netAmount,
-        grossAmount,
-        applicableTax
-      ) &&
+      hasCorrectAmount &&
       !hasBothTaxIdNumbers
     );
   };
 
-  private netAmountIsCorrectlyCalculated(
+  private idFrom = (invoice: string): string => {
+    return this.extractFieldsFrom(invoice)[0];
+  };
+
+  private extractFieldsFrom(invoice: string): string[] {
+    return invoice.split(",");
+  }
+
+  private hasCorrectAmount(
     netAmount: string,
     grossAmount: string,
-    tax: string
+    applicableTax: string
   ) {
     const parsedNetAmount = parseFloat(netAmount);
     const parsedGrossAmount = parseFloat(grossAmount);
-    const parsedTax = parseFloat(tax);
+    const parsedTax = parseFloat(applicableTax);
     return (
       parsedNetAmount ===
       parsedGrossAmount - (parsedGrossAmount * parsedTax) / 100
@@ -65,9 +70,7 @@ class CSVFilter {
   }
 
   private takeRepeatedIdsFrom(invoices: string[]) {
-    const invoiceIds = invoices.map(
-      (invoice) => this.extractFieldsFrom(invoice)[0]
-    );
+    const invoiceIds = invoices.map(this.idFrom);
     return invoiceIds.filter((id, index) => invoiceIds.indexOf(id) !== index);
   }
 }
