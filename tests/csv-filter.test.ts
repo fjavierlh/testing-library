@@ -82,7 +82,7 @@ describe("The CSV filter", () => {
     const header =
       "Num _factura, Fecha, Bruto, Neto, IVA, IGIC, Concepto, CIF_cliente, NIF_cliente";
     const invoiceLine = fileWithOneInvoiceLineHaving({});
-    const invoiceLine2 = fileWithOneInvoiceLineHaving({});
+    const invoiceLine2 = fileWithOneInvoiceLineHaving({ invoiceId: "2" });
 
     const csvFilter = CSVFilter.create([header, invoiceLine, invoiceLine2]);
     const result = csvFilter.filteredLines;
@@ -201,7 +201,7 @@ describe("The CSV filter", () => {
     ]);
     const result = csvFilter.filteredLines;
 
-    expect(result).toEqual([header]);
+    expect(result).toEqual([header, invoiceLine4]);
   });
 
   it("takes all repeated invoice ids", () => {
