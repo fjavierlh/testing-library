@@ -2,6 +2,9 @@ class CSVFilter {
   private constructor(private readonly lines: string[]) {}
 
   static create(lines: string[]) {
+    if (lines.length === 1) {
+      throw new Error("Files with single lines are not allowed");
+    }
     return new CSVFilter(lines);
   }
 
