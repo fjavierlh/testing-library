@@ -183,6 +183,7 @@ describe("The CSV filter", () => {
   });
 
   interface FileWithOneInvoiceLineHavingParams {
+    invoiceId?: string;
     IVATax?: string;
     IGICTax?: string;
     netAmount?: string;
@@ -190,12 +191,12 @@ describe("The CSV filter", () => {
   }
 
   function fileWithOneInvoiceLineHaving({
+    invoiceId = "1",
     IVATax = "21",
     IGICTax = emtpyField,
     netAmount = "790",
     nif = emtpyField,
   }: FileWithOneInvoiceLineHavingParams) {
-    const invoiceId = "1";
     const invoiceDate = "02/05/2021";
     const grossAmount = "1000";
     const concept = "ACER Laptop";
