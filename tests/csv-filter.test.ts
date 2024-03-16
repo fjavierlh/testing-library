@@ -204,6 +204,13 @@ describe("The CSV filter", () => {
     expect(result).toEqual([header, invoiceLine4]);
   });
 
+  it("an empty file produces same file as result", () => {
+    const csvFilter = CSVFilter.create([]);
+    const result = csvFilter.filteredLines;
+
+    expect(result).toEqual([]);
+  });
+
   interface FileWithOneInvoiceLineHavingParams {
     invoiceId?: string;
     IVATax?: string;
