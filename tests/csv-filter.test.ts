@@ -78,6 +78,18 @@ describe("The CSV filter", () => {
     expect(result).toEqual([header, invoiceLine]);
   });
 
+  it("allows multiple correct invoice lines", () => {
+    const header =
+      "Num _factura, Fecha, Bruto, Neto, IVA, IGIC, Concepto, CIF_cliente, NIF_cliente";
+    const invoiceLine = fileWithOneInvoiceLineHaving({});
+    const invoiceLine2 = fileWithOneInvoiceLineHaving({});
+
+    const csvFilter = CSVFilter.create([header, invoiceLine, invoiceLine2]);
+    const result = csvFilter.filteredLines;
+
+    expect(result).toEqual([header, invoiceLine, invoiceLine2]);
+  });
+
   it("removes invoice line if has excluyent taxes", () => {
     const header =
       "Num _factura, Fecha, Bruto, Neto, IVA, IGIC, Concepto, CIF_cliente, NIF_cliente";
