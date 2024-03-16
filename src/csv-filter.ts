@@ -31,10 +31,14 @@ class CSVFilter {
       hasSomeTax &&
       !hasBothTaxes &&
       someTaxIsNotADecimal &&
-      this.netAmountIsCorrectlyCalculated(netAmount, grossAmount, applicableTax) &&
+      this.netAmountIsCorrectlyCalculated(
+        netAmount,
+        grossAmount,
+        applicableTax
+      ) &&
       !hasBothTaxIdNumbers
     );
-  }
+  };
 
   private netAmountIsCorrectlyCalculated(
     netAmount: string,
