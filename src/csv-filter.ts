@@ -58,7 +58,7 @@ class CSVFilter {
     );
   }
 
-  takeRepeatedIdsFrom(invoices: string[]) {
+  private takeRepeatedIdsFrom(invoices: string[]) {
     const invoiceIds = invoices.map(
       (invoice) => this.extractFieldsFrom(invoice)[0]
     );
