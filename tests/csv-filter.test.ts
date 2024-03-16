@@ -211,6 +211,12 @@ describe("The CSV filter", () => {
     expect(result).toEqual([]);
   });
 
+  it("does not allow a list of invoices with a single line", () => {
+    const result = () => CSVFilter.create([header]);
+
+    expect(result).toThrow();
+  });
+
   interface FileWithOneInvoiceLineHavingParams {
     invoiceId?: string;
     IVATax?: string;
