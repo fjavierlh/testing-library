@@ -53,6 +53,13 @@ class CSVFilter {
       parsedGrossAmount - (parsedGrossAmount * parsedTax) / 100
     );
   }
+
+  takeRepeatedIdsFrom(invoices: string[]) {
+    const invoiceIds = invoices.map(
+      (invoice) => this.extractFieldsFrom(invoice)[0]
+    );
+    return invoiceIds.filter((id, index) => invoiceIds.indexOf(id) !== index);
+  }
 }
 
 export default CSVFilter;
