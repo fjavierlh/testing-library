@@ -1,3 +1,15 @@
+interface Invoice {
+  id: string;
+  date: string;
+  grossAmount: string;
+  netAmount: string;
+  ivaTax: string;
+  igicTax: string;
+  concept: string;
+  cif: string;
+  nif: string;
+}
+
 class CSVFilter {
   private constructor(private readonly lines: string[]) {}
 
@@ -12,47 +24,80 @@ class CSVFilter {
     if (this.lines.length === 0) {
       return [];
     }
-    const [header, ...invoicesLines] = this.lines;
-    const validatedInvoices = invoicesLines.filter(this.isValidInvoice);
-    const duplicatedIds = this.takeRepeatedIdsFrom(validatedInvoices);
+    const [header, ...rawInvoices] = this.lines;
+    const validatedInvoices = rawInvoices.filter(this.isValidInvoice);
+    const duplicatedIds = this.repeatedIdsFrom(validatedInvoices);
     const nonRepeatedInvoices = validatedInvoices.filter(
       (invoice) => !duplicatedIds.includes(this.idFrom(invoice))
     );
     return [header, ...nonRepeatedInvoices];
   }
 
-  private isValidInvoice = (invoice: string): boolean => {
-    const [, , grossAmount, netAmount, IVAtax, IGICtax, , cif, nif] =
-      this.extractFieldsFrom(invoice);
-    const applicableTax = IVAtax || IGICtax;
-    const hasSomeTax = Boolean(applicableTax);
-    const hasBothTaxes = Boolean(IVAtax && IGICtax);
-    const checkDecimalRegEx = /^\d*$/;
-    const someTaxIsNotADecimal = [IVAtax, IGICtax]
-      .filter(Boolean)
-      .some((tax) => checkDecimalRegEx.test(tax));
-    const hasBothTaxIdNumbers = nif && cif;
-    const hasCorrectAmount = this.hasCorrectAmount(
-      netAmount,
-      grossAmount,
-      applicableTax
-    );
+  private isValidInvoice = (rawInvoice: string): boolean => {
+    const { grossAmount, netAmount, ivaTax, igicTax, cif, nif } =
+      this.extractFieldsFrom(rawInvoice);
+    const applicableTax = ivaTax || igicTax;
 
     return (
-      hasSomeTax &&
-      !hasBothTaxes &&
-      someTaxIsNotADecimal &&
-      hasCorrectAmount &&
-      !hasBothTaxIdNumbers
+      this.hasCorrectTaxes(ivaTax, igicTax) &&
+      this.hasCorrectAmount(netAmount, grossAmount, applicableTax) &&
+      this.hasSingleTaxIdentify(nif, cif)
     );
   };
 
+  private extractFieldsFrom(rawInvoice: string): Invoice {
+    const [
+      id,
+      date,
+      grossAmount,
+      netAmount,
+      ivaTax,
+      igicTax,
+      concept,
+      cif,
+      nif,
+    ] = rawInvoice.split(",");
+    return {
+      id,
+      date,
+      grossAmount,
+      netAmount,
+      ivaTax,
+      igicTax,
+      concept,
+      cif,
+      nif,
+    };
+  }
+
+  private repeatedIdsFrom(invoices: string[]) {
+    const invoiceIds = invoices.map(this.idFrom);
+    return invoiceIds.filter((id, index) => invoiceIds.indexOf(id) !== index);
+  }
+
   private idFrom = (invoice: string): string => {
-    return this.extractFieldsFrom(invoice)[0];
+    return this.extractFieldsFrom(invoice).id;
   };
 
-  private extractFieldsFrom(invoice: string): string[] {
-    return invoice.split(",");
+  private hasCorrectTaxes(ivaTax: any, igicTax: any) {
+    return (
+      this.hasSomeTax(ivaTax, igicTax) &&
+      this.hasExclusiveTaxation(ivaTax, igicTax) &&
+      this.taxesAreDecimals(ivaTax, igicTax)
+    );
+  }
+
+  private hasSomeTax(ivaTax: string, igicTax: string) {
+    return ivaTax || igicTax;
+  }
+
+  private hasExclusiveTaxation(ivaTax: string, igicTax: string) {
+    return !(ivaTax && igicTax);
+  }
+
+  private taxesAreDecimals(...taxes: string[]) {
+    const checkIsDecimalRegEx = /^\d*$/;
+    return taxes.filter(Boolean).some((tax) => checkIsDecimalRegEx.test(tax));
   }
 
   private hasCorrectAmount(
@@ -69,9 +114,8 @@ class CSVFilter {
     );
   }
 
-  private takeRepeatedIdsFrom(invoices: string[]) {
-    const invoiceIds = invoices.map(this.idFrom);
-    return invoiceIds.filter((id, index) => invoiceIds.indexOf(id) !== index);
+  private hasSingleTaxIdentify(nif: string, cif: string) {
+    return !(nif && cif);
   }
 }
 
