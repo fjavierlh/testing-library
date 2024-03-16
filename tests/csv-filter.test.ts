@@ -106,7 +106,7 @@ describe("The CSV filter", () => {
     expect(result).toEqual([header]);
   });
 
-  it("removes invoice line if tax is not a decimal number", () => {
+  it("removes invoice line if some tax is not a decimal number", () => {
     const header =
       "Num _factura, Fecha, Bruto, Neto, IVA, IGIC, Concepto, CIF_cliente, NIF_cliente";
     const invoiceLine = fileWithOneInvoiceLineHaving({ IVATax: "XYZ" });
@@ -122,37 +122,33 @@ describe("The CSV filter", () => {
       "Num _factura, Fecha, Bruto, Neto, IVA, IGIC, Concepto, CIF_cliente, NIF_cliente";
     const invoiceLine = fileWithOneInvoiceLineHaving({
       IVATax: "XYZ",
-      IGICTax: "7cd",
-    });
-
-    const csvFilter = CSVFilter.create([header, invoiceLine]);
-    const result = csvFilter.filteredLines;
-
-    expect(result).toEqual([header]);
-  });
-
-  it("removes invoice line if net amount is miscalculated for iva tax", () => {
-    const header =
-      "Num _factura, Fecha, Bruto, Neto, IVA, IGIC, Concepto, CIF_cliente, NIF_cliente";
-    const invoiceLine = fileWithOneInvoiceLineHaving({
-      IVATax: "21",
-      IGICTax: "",
-      netAmount: "900",
-    });
-
-    const csvFilter = CSVFilter.create([header, invoiceLine]);
-    const result = csvFilter.filteredLines;
-
-    expect(result).toEqual([header]);
-  });
-
-  it("removes invoice line if net amount is miscalculated for iva tax", () => {
-    const header =
-      "Num _factura, Fecha, Bruto, Neto, IVA, IGIC, Concepto, CIF_cliente, NIF_cliente";
-    const invoiceLine = fileWithOneInvoiceLineHaving({
-      IVATax: "",
       IGICTax: "7",
+    });
+
+    const csvFilter = CSVFilter.create([header, invoiceLine]);
+    const result = csvFilter.filteredLines;
+
+    expect(result).toEqual([header]);
+  });
+
+  it("removes invoice line if net amount is miscalculated for IVA tax", () => {
+    const header =
+      "Num _factura, Fecha, Bruto, Neto, IVA, IGIC, Concepto, CIF_cliente, NIF_cliente";
+    const invoiceLine = fileWithOneInvoiceLineHaving({
       netAmount: "900",
+    });
+
+    const csvFilter = CSVFilter.create([header, invoiceLine]);
+    const result = csvFilter.filteredLines;
+
+    expect(result).toEqual([header]);
+  });
+
+  it("removes invoice line if net amount is miscalculated for IGIC tax", () => {
+    const header =
+      "Num _factura, Fecha, Bruto, Neto, IVA, IGIC, Concepto, CIF_cliente, NIF_cliente";
+    const invoiceLine = fileWithOneInvoiceLineHaving({
+      IGICTax: "7",
     });
 
     const csvFilter = CSVFilter.create([header, invoiceLine]);
