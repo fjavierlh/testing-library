@@ -182,6 +182,28 @@ describe("The CSV filter", () => {
     expect(result).toEqual([header]);
   });
 
+  it("removes all invoice lines with repeated id", () => {
+    const header =
+      "Num _factura, Fecha, Bruto, Neto, IVA, IGIC, Concepto, CIF_cliente, NIF_cliente";
+    const invoiceLine = fileWithOneInvoiceLineHaving({ invoiceId: "1" });
+    const invoiceLine2 = fileWithOneInvoiceLineHaving({ invoiceId: "1" });
+    const invoiceLine3 = fileWithOneInvoiceLineHaving({ invoiceId: "3" });
+    const invoiceLine4 = fileWithOneInvoiceLineHaving({ invoiceId: "4" });
+    const invoiceLine5 = fileWithOneInvoiceLineHaving({ invoiceId: "3" });
+
+    const csvFilter = CSVFilter.create([
+      header,
+      invoiceLine,
+      invoiceLine2,
+      invoiceLine3,
+      invoiceLine4,
+      invoiceLine5,
+    ]);
+    const result = csvFilter.filteredLines;
+
+    expect(result).toEqual([header]);
+  });
+
   interface FileWithOneInvoiceLineHavingParams {
     invoiceId?: string;
     IVATax?: string;
