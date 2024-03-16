@@ -7,10 +7,7 @@ class CSVFilter {
 
   get filteredLines(): string[] {
     const [header, ...invoicesLines] = this.lines;
-    const filteredInvoices = invoicesLines.filter((invoice) =>
-      this.isValidInvoice(invoice)
-    );
-
+    const filteredInvoices = invoicesLines.filter(this.isValidInvoice);
     return [header, ...filteredInvoices];
   }
 
@@ -18,7 +15,7 @@ class CSVFilter {
     return invoice.split(",");
   }
 
-  private isValidInvoice(invoice: string): boolean {
+  private isValidInvoice = (invoice: string): boolean => {
     const [, , grossAmount, netAmount, IVAtax, IGICtax, , cif, nif] =
       this.extractFieldsFrom(invoice);
     const applicableTax = IVAtax || IGICtax;
