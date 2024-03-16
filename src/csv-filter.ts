@@ -82,7 +82,7 @@ class CSVFilter {
   private hasCorrectTaxes(ivaTax: any, igicTax: any) {
     return (
       this.hasSomeTax(ivaTax, igicTax) &&
-      this.hasExclusiveTaxation(ivaTax, igicTax) &&
+      this.hasExclusionaryTaxes(ivaTax, igicTax) &&
       this.taxesAreDecimals(ivaTax, igicTax)
     );
   }
@@ -91,7 +91,7 @@ class CSVFilter {
     return ivaTax || igicTax;
   }
 
-  private hasExclusiveTaxation(ivaTax: string, igicTax: string) {
+  private hasExclusionaryTaxes(ivaTax: string, igicTax: string) {
     return !(ivaTax && igicTax);
   }
 

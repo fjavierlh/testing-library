@@ -3,7 +3,7 @@ import CSVFilter from "../src/csv-filter";
 describe("The CSV filter", () => {
   const header =
     "Num _factura, Fecha, Bruto, Neto, IVA, IGIC, Concepto, CIF_cliente, NIF_cliente";
-  const emtpyField = "";
+  const emptyField = "";
 
   it("allows correct lines", () => {
     const invoiceLine = fileWithOneInvoiceLineHaving({});
@@ -41,7 +41,7 @@ describe("The CSV filter", () => {
     expect(result).toEqual([header, invoiceLine, invoiceLine2]);
   });
 
-  it("removes invoice line if has excluyent taxes", () => {
+  it("removes invoice line if has exclusionary taxes", () => {
     const header =
       "Num _factura, Fecha, Bruto, Neto, IVA, IGIC, Concepto, CIF_cliente, NIF_cliente";
     const invoiceLine = fileWithOneInvoiceLineHaving({
@@ -179,9 +179,9 @@ describe("The CSV filter", () => {
   function fileWithOneInvoiceLineHaving({
     invoiceId = "1",
     IVATax = "21",
-    IGICTax = emtpyField,
+    IGICTax = emptyField,
     netAmount = "790",
-    nif = emtpyField,
+    nif = emptyField,
   }: FileWithOneInvoiceLineHavingParams) {
     const invoiceDate = "02/05/2021";
     const grossAmount = "1000";
