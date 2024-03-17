@@ -79,7 +79,7 @@ class CSVFilter {
     return this.extractFieldsFrom(invoice).id;
   };
 
-  private hasCorrectTaxes(ivaTax: any, igicTax: any) {
+  private hasCorrectTaxes(ivaTax: string, igicTax: string) {
     return (
       this.hasSomeTax(ivaTax, igicTax) &&
       this.hasExclusionaryTaxes(ivaTax, igicTax) &&
