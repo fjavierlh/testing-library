@@ -13,7 +13,7 @@ interface InvoiceFields {
 class CSVFilter {
   private constructor(private readonly lines: string[]) {}
 
-  static create(lines: string[]) {
+  static create(lines: string[]): CSVFilter {
     if (lines.length === 1) {
       throw new Error("Files with single lines are not allowed");
     }
@@ -97,7 +97,7 @@ class CSVFilter {
     return (
       this.hasSomeTax(ivaTax, igicTax) &&
       this.hasExclusionaryTaxes(ivaTax, igicTax) &&
-      this.taxesAreDecimals(ivaTax, igicTax)
+      this.areTaxesDecimals(ivaTax, igicTax)
     );
   }
 
@@ -109,7 +109,7 @@ class CSVFilter {
     return !(ivaTax && igicTax);
   }
 
-  private taxesAreDecimals(...taxes: string[]): boolean {
+  private areTaxesDecimals(...taxes: string[]): boolean {
     const checkIfIsDecimalRegEx = /^\d*$/;
     return taxes.filter(Boolean).some((tax) => checkIfIsDecimalRegEx.test(tax));
   }
