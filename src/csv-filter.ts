@@ -1,4 +1,4 @@
-interface Invoice {
+interface InvoiceFields {
   id: string;
   date: string;
   grossAmount: string;
@@ -25,12 +25,10 @@ class CSVFilter {
       return [];
     }
     const [header, ...rawInvoices] = this.lines;
-    const validatedInvoices = rawInvoices.filter(this.isValidInvoice);
-    const duplicatedIds = this.repeatedIdsFrom(validatedInvoices);
-    const nonRepeatedInvoices = validatedInvoices.filter(
-      (invoice) => !duplicatedIds.includes(this.idFrom(invoice))
-    );
-    return [header, ...nonRepeatedInvoices];
+    return [
+      header,
+      ...this.nonRepeatedInvoicesFrom(this.validatedInvoicesFrom(rawInvoices)),
+    ];
   }
 
   private isValidInvoice = (rawInvoice: string): boolean => {
@@ -45,7 +43,18 @@ class CSVFilter {
     );
   };
 
-  private extractFieldsFrom(rawInvoice: string): Invoice {
+  private validatedInvoicesFrom(rawInvoices: string[]) {
+    return rawInvoices.filter(this.isValidInvoice);
+  }
+
+  private nonRepeatedInvoicesFrom(validatedInvoices: string[]): string[] {
+    const repeatedInvoicesIds = this.repeatedIdsFrom(validatedInvoices);
+    return validatedInvoices.filter(
+      (invoice: string) => !repeatedInvoicesIds.includes(this.idFrom(invoice))
+    );
+  }
+
+  private extractFieldsFrom(rawInvoice: string): InvoiceFields {
     const [
       id,
       date,
@@ -70,16 +79,21 @@ class CSVFilter {
     };
   }
 
-  private repeatedIdsFrom(invoices: string[]) {
-    const invoiceIds = invoices.map(this.idFrom);
-    return invoiceIds.filter((id, index) => invoiceIds.indexOf(id) !== index);
+  private repeatedIdsFrom(invoices: string[]): string[] {
+    return invoices.map(this.idFrom).filter(this.isNonRepeatedIdInvoice);
   }
+
+  private isNonRepeatedIdInvoice = (
+    id: string,
+    index: number,
+    invoiceIds: string[]
+  ): boolean => invoiceIds.indexOf(id) !== index;
 
   private idFrom = (invoice: string): string => {
     return this.extractFieldsFrom(invoice).id;
   };
 
-  private hasCorrectTaxes(ivaTax: string, igicTax: string) {
+  private hasCorrectTaxes(ivaTax: string, igicTax: string): boolean {
     return (
       this.hasSomeTax(ivaTax, igicTax) &&
       this.hasExclusionaryTaxes(ivaTax, igicTax) &&
@@ -87,24 +101,24 @@ class CSVFilter {
     );
   }
 
-  private hasSomeTax(ivaTax: string, igicTax: string) {
-    return ivaTax || igicTax;
+  private hasSomeTax(ivaTax: string, igicTax: string): boolean {
+    return !!(ivaTax || igicTax);
   }
 
-  private hasExclusionaryTaxes(ivaTax: string, igicTax: string) {
+  private hasExclusionaryTaxes(ivaTax: string, igicTax: string): boolean {
     return !(ivaTax && igicTax);
   }
 
-  private taxesAreDecimals(...taxes: string[]) {
-    const checkIsDecimalRegEx = /^\d*$/;
-    return taxes.filter(Boolean).some((tax) => checkIsDecimalRegEx.test(tax));
+  private taxesAreDecimals(...taxes: string[]): boolean {
+    const checkIfIsDecimalRegEx = /^\d*$/;
+    return taxes.filter(Boolean).some((tax) => checkIfIsDecimalRegEx.test(tax));
   }
 
   private hasCorrectAmount(
     netAmount: string,
     grossAmount: string,
     applicableTax: string
-  ) {
+  ): boolean {
     const parsedNetAmount = parseFloat(netAmount);
     const parsedGrossAmount = parseFloat(grossAmount);
     const parsedTax = parseFloat(applicableTax);
@@ -114,7 +128,7 @@ class CSVFilter {
     );
   }
 
-  private hasSingleTaxIdentify(nif: string, cif: string) {
+  private hasSingleTaxIdentify(nif: string, cif: string): boolean {
     return !(nif && cif);
   }
 }
