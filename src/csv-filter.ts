@@ -31,6 +31,10 @@ class CSVFilter {
     ];
   }
 
+  private validatedInvoicesFrom(rawInvoices: string[]) {
+    return rawInvoices.filter(this.isValidInvoice);
+  }
+
   private isValidInvoice = (rawInvoice: string): boolean => {
     const { grossAmount, netAmount, ivaTax, igicTax, cif, nif } =
       this.extractFieldsFrom(rawInvoice);
@@ -43,16 +47,31 @@ class CSVFilter {
     );
   };
 
-  private validatedInvoicesFrom(rawInvoices: string[]) {
-    return rawInvoices.filter(this.isValidInvoice);
-  }
-
   private nonRepeatedInvoicesFrom(validatedInvoices: string[]): string[] {
     const repeatedInvoicesIds = this.repeatedIdsFrom(validatedInvoices);
-    return validatedInvoices.filter(
-      (invoice: string) => !repeatedInvoicesIds.includes(this.idFrom(invoice))
+    return validatedInvoices.filter((invoice: string) =>
+      this.isNonRepeatedInvoice(invoice, repeatedInvoicesIds)
     );
   }
+
+  private isNonRepeatedInvoice = (
+    invoice: string,
+    repeatedInvoicesIds: string[]
+  ): boolean => !repeatedInvoicesIds.includes(this.idFrom(invoice));
+
+  private repeatedIdsFrom(invoices: string[]): string[] {
+    return invoices.map(this.idFrom).filter(this.isRepeatedIdInvoice);
+  }
+
+  private isRepeatedIdInvoice = (
+    id: string,
+    index: number,
+    invoiceIds: string[]
+  ): boolean => invoiceIds.indexOf(id) !== index;
+
+  private idFrom = (invoice: string): string => {
+    return this.extractFieldsFrom(invoice).id;
+  };
 
   private extractFieldsFrom(rawInvoice: string): InvoiceFields {
     const [
@@ -78,20 +97,6 @@ class CSVFilter {
       nif,
     };
   }
-
-  private repeatedIdsFrom(invoices: string[]): string[] {
-    return invoices.map(this.idFrom).filter(this.isNonRepeatedIdInvoice);
-  }
-
-  private isNonRepeatedIdInvoice = (
-    id: string,
-    index: number,
-    invoiceIds: string[]
-  ): boolean => invoiceIds.indexOf(id) !== index;
-
-  private idFrom = (invoice: string): string => {
-    return this.extractFieldsFrom(invoice).id;
-  };
 
   private hasCorrectTaxes(ivaTax: string, igicTax: string): boolean {
     return (
