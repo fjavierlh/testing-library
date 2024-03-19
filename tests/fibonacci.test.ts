@@ -11,4 +11,10 @@ describe("The fibonacci sequence", () => {
 
     expect(result).toBe(0);
   });
+
+  it("yields value one for number one", () => {
+    const result = fibonacci(1);
+
+    expect(result).toBe(1);
+  });
 });
