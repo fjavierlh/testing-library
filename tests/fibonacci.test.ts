@@ -17,4 +17,10 @@ describe("The fibonacci sequence", () => {
 
     expect(result).toBe(1);
   });
+
+  it("is a series where the value for a number is the addition of the two precedent values", () => {
+    const result = fibonacci(2);
+
+    expect(result).toBe(fibonacci(0) + fibonacci(1));
+  });
 });
