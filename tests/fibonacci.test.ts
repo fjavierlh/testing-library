@@ -6,7 +6,7 @@ import { fibonacci } from "./../src/fibonacci";
  */
 
 describe("The fibonacci sequence", () => {
-  it("yields value zero for zero", () => {
+  it("yields value zero for number zero", () => {
     const result = fibonacci(0);
 
     expect(result).toBe(0);
