@@ -5,6 +5,7 @@ export function primeFactorsFor(num: number): number[] {
 }
 
 function findTheSmallestPrimeFor(num: number) {
+  if (num === 1) return num;
   let factor = 2;
   while (num % factor !== 0) {
     ++factor;
