@@ -3,16 +3,18 @@
     "target": "es6",
     "module": "commonjs",
     "moduleResolution": "node",
+    "baseUrl": ".",
     "jsx": "react",
     "noImplicitAny": false,
     "sourceMap": true,
     "outDir": "./lib/"
   },
   "include": [
-    "src/**/*"
-, "tests"  ],
+    "tests",
+    "src/**/*",
+  ],
   "exclude": [
     "node_modules",
-    "tests/**/*"
+    // "tests/**/*"
   ]
 }

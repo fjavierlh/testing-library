@@ -10,13 +10,10 @@ Cases
 5 * 7 * 11 * 3 ⇒ [3,5,7,11]
  */
 
-function primeFactorsFor(num: number): number[] {
-  return [2];
-}
+import { primeFactorsFor } from "../src/prime-factors";
 
 describe("The factor primes", () => {
   it("the prime composition of a given number", () => {
-    const result = primeFactorsFor(2);
-    expect(result).toEqual([2]);
+    expect(primeFactorsFor(2)).toEqual([2]);
   });
 });
