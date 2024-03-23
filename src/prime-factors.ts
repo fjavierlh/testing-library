@@ -4,7 +4,7 @@ export function primeFactorsFor(num: number): number[] {
   const remainder = num / factor;
 
   if (remainder > 1) {
-    return factors.concat(factor);
+    return factors.concat(primeFactorsFor(remainder));
   }
 
   return factors;
