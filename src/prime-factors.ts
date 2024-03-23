@@ -5,12 +5,11 @@ export function primeFactorsFor(num: number): number[] {
     ++factor;
   }
 
-  const factors = [factor];
   const remainder = num / factor;
 
-  if (remainder > 1) {
-    return factors.concat(primeFactorsFor(remainder));
+  if (remainder <= 1) {
+    return [factor];
+  } else {
+    return [factor].concat(primeFactorsFor(remainder));
   }
-
-  return factors;
 }
