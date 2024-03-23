@@ -17,5 +17,6 @@ describe("The factor primes", () => {
     expect(primeFactorsFor(2)).toEqual([2]);
     expect(primeFactorsFor(2 * 2)).toEqual([2, 2]);
     expect(primeFactorsFor(2 * 2 * 2)).toEqual([2, 2, 2]);
+    expect(primeFactorsFor(3)).toEqual([3]);
   });
 });
