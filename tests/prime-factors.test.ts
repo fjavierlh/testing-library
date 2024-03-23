@@ -15,5 +15,6 @@ import { primeFactorsFor } from "../src/prime-factors";
 describe("The factor primes", () => {
   it("the prime composition of a given number", () => {
     expect(primeFactorsFor(2)).toEqual([2]);
+    expect(primeFactorsFor(4)).toEqual([2,2]);
   });
 });
