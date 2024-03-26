@@ -9,9 +9,12 @@ wordWrap(' abcdf',4) ⇒ '\nabcd\nf'
 wordWrap(null,5) ⇒ ''
 wordWrap('hello',-5) ⇒ throw exception
 */
+function wordWrap(text: string, columnWidth: number): string {
+  return "";
+}
 
-describe('The word wrap', () => { 
+describe("The word wrap", () => {
   it("return same output if word does not need be wrapped", () => {
-    expect(wordWrap("", 5)).toBe((""))
-  } )
- })
+    expect(wordWrap("", 5)).toBe("");
+  });
+});
