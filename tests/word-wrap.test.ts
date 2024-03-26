@@ -27,4 +27,8 @@ describe("The word wrap", () => {
   it("makes two lines if a text without spaces overflows the max column width once", () => {
     expect(wordWrap("longword", 4)).toBe("long\nword");
   });
+
+  it("makes three lines if a text without spaces overflows the max column width twice", () => {
+    expect(wordWrap("reallylongword", 4)).toBe("real\nlylo\nngwo\nrd");
+  });
 });
