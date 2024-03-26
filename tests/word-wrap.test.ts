@@ -14,7 +14,8 @@ function wordWrap(text: string, columnWidth: number): string {
 }
 
 describe("The word wrap", () => {
-  it("return same output if word does not need be wrapped", () => {
+  it("makes a single line if text not overflow the max column width", () => {
     expect(wordWrap("", 5)).toBe("");
+    expect(wordWrap("hello", 5)).toBe("hello");
   });
 });
