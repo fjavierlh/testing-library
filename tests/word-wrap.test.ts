@@ -18,4 +18,8 @@ describe("The word wrap", () => {
     expect(wordWrap("", 5)).toBe("");
     expect(wordWrap("hello", 5)).toBe("hello");
   });
+
+  it("makes two lines if a text without spaces overflows the max column width once", () => {
+    expect(wordWrap("longword", 4)).toBe("long\nword");
+  });
 });
