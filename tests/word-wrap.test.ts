@@ -10,10 +10,12 @@ wordWrap(null,5) ⇒ ''
 wordWrap('hello',-5) ⇒ throw exception
 */
 function wordWrap(text: string, columnWidth: number): string {
-  if (text.length > columnWidth) {
-    return text.substring(0, 4) + "\n" + text.substring(4);
+  if (text.length <= columnWidth) {
+    return text;
   }
-  return text;
+  const wrappedText = text.substring(0, columnWidth) + "\n";
+  const unwrappedText = text.substring(columnWidth);
+  return wrappedText + unwrappedText;
 }
 
 describe("The word wrap", () => {
