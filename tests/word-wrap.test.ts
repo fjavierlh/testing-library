@@ -10,7 +10,7 @@ wordWrap(null,5) ⇒ ''
 wordWrap('hello',-5) ⇒ throw exception
 */
 function wordWrap(text: string, columnWidth: number): string {
-  return "";
+  return text;
 }
 
 describe("The word wrap", () => {
