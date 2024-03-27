@@ -15,9 +15,10 @@ function wordWrap(text: string, columnWidth: number): string {
   }
   let wrappedText: string;
   let unwrappedText: string;
-  if (text.indexOf(" ") > -1 && text.indexOf(" ") < columnWidth) {
-    wrappedText = text.substring(0, text.indexOf(" ")).concat("\n");
-    unwrappedText = text.substring(text.indexOf(" ") + 1);
+  const nextSpacePosition = text.indexOf(" ");
+  if (nextSpacePosition > -1 && nextSpacePosition < columnWidth) {
+    wrappedText = text.substring(0, nextSpacePosition).concat("\n");
+    unwrappedText = text.substring(nextSpacePosition + 1);
   } else {
     wrappedText = text.substring(0, columnWidth).concat("\n");
     unwrappedText = text.substring(columnWidth);
@@ -40,7 +41,7 @@ describe("The word wrap", () => {
     expect(wordWrap("reallylongword", 4)).toBe("real\nlylo\nngwo\nrd");
   });
 
-  it("makes two lines if a text with spaces overflows the max column width once", () => {
+  it("makes lines if a text spaces if complete words overflows the max column width", () => {
     expect(wordWrap("abc def", 4)).toBe("abc\ndef");
     expect(wordWrap("abc def ghi", 4)).toBe("abc\ndef\nghi");
   });
