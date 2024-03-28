@@ -57,9 +57,13 @@ describe("The word wrap", () => {
     expect(wordWrap("abc def", 4)).toBe("abc\ndef");
     expect(wordWrap("abc def ghi", 4)).toBe("abc\ndef\nghi");
   });
-  
+
   it("makes empty line if text is falsy value", () => {
     expect(wordWrap(null, 4)).toBe("");
     expect(wordWrap(undefined, 4)).toBe("");
+  });
+
+  it("throw an exception if column width is non positive number", () => {
+    expect(() => wordWrap("irrelevant-text", -1)).toThrow("Negative column width is not allowed");
   });
 });
