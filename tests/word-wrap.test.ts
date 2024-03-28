@@ -9,7 +9,13 @@ wordWrap(' abcdf',4) ⇒ '\nabcd\nf'
 wordWrap(null,5) ⇒ ''
 wordWrap('hello',-5) ⇒ throw exception
 */
-function wordWrap(text: string, columnWidth: number): string {
+function wordWrap(
+  text: string | null | undefined,
+  columnWidth: number
+): string {
+  if (!text) {
+    return "";
+  }
   if (text.length <= columnWidth) {
     return text;
   }
