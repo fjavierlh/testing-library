@@ -13,6 +13,9 @@ function wordWrap(
   text: string | null | undefined,
   columnWidth: number
 ): string {
+  if (columnWidth < 0) {
+    throw new Error("Negative column width is not allowed");
+  }
   if (!text) {
     return "";
   }
@@ -64,6 +67,8 @@ describe("The word wrap", () => {
   });
 
   it("throw an exception if column width is non positive number", () => {
-    expect(() => wordWrap("irrelevant-text", -1)).toThrow("Negative column width is not allowed");
+    expect(() => wordWrap("irrelevant-text", -1)).toThrow(
+      "Negative column width is not allowed"
+    );
   });
 });
