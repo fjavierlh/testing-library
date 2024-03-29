@@ -34,14 +34,17 @@ function wordWrap(
   text: string | null | undefined,
   columnWidth: number
 ): string {
-  return wordWrapNonPrimitive(text, new ColumnWidth(columnWidth));
+  return wordWrapNonPrimitive(text, ColumnWidth.create(columnWidth));
 }
 
 class ColumnWidth {
-  constructor(private readonly width: number) {
+  private constructor(private readonly width: number) {}
+
+  static create(width: number) {
     if (width < 0) {
       throw new Error("Negative column width is not allowed");
     }
+    return new ColumnWidth(width);
   }
 
   value() {
