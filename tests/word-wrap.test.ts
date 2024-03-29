@@ -43,30 +43,28 @@ function getWrapIndex(text: string, columnWidth: number) {
 }
 
 describe("The word wrap", () => {
-  it("makes a single line if text not overflow the max column width", () => {
-    expect(wordWrap("", 5)).toBe("");
+  it("small texts does not need to be wrapped", () => {
     expect(wordWrap("hello", 5)).toBe("hello");
   });
 
-  it("makes two lines if a text without spaces overflows the max column width once", () => {
+  it("words are wrapped when do not fit with the column width", () => {
     expect(wordWrap("longword", 4)).toBe("long\nword");
-  });
-
-  it("makes three lines if a text without spaces overflows the max column width twice", () => {
     expect(wordWrap("reallylongword", 4)).toBe("real\nlylo\nngwo\nrd");
   });
 
-  it("makes lines if a text spaces if complete words overflows the max column width", () => {
+  it("spaces are preferred for wrapping", () => {
     expect(wordWrap("abc def", 4)).toBe("abc\ndef");
     expect(wordWrap("abc def ghi", 4)).toBe("abc\ndef\nghi");
+    expect(wordWrap(" abcd", 4)).toBe("\nabcd");
   });
 
-  it("makes empty line if text is falsy value", () => {
+  it("empty text does not need to be wrapped", () => {
+    expect(wordWrap("", 5)).toBe("");
     expect(wordWrap(null, 4)).toBe("");
     expect(wordWrap(undefined, 4)).toBe("");
   });
 
-  it("throw an exception if column width is non positive number", () => {
+  it("does not allow for negative column width", () => {
     expect(() => wordWrap("irrelevant-text", -1)).toThrow(
       "Negative column width is not allowed"
     );
