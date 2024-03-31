@@ -14,7 +14,7 @@ function wordWrap(text: string, columnWidth: number): string {
   return wordWrapNonPrimitive(
     WrappeableText.create(text),
     ColumnWidth.create(columnWidth)
-  );
+  ).value();
 }
 
 class ColumnWidth {
@@ -47,11 +47,19 @@ class WrappeableText {
   }
 
   wrappedText(columnWidth: ColumnWidth) {
-    return this.value().substring(0, this.wrapIndex(columnWidth)).concat("\n");
+    return WrappeableText.create(
+      this.value().substring(0, this.wrapIndex(columnWidth)).concat("\n")
+    );
   }
 
   unwrappedText(columnWidth: ColumnWidth) {
-    return this.value().substring(this.unwrapIndex(columnWidth));
+    return WrappeableText.create(
+      this.value().substring(this.unwrapIndex(columnWidth))
+    );
+  }
+
+  concat(text: WrappeableText): WrappeableText {
+    return WrappeableText.create(this.value().concat(text.value()));
   }
 
   private wrapIndex(columnWidth: ColumnWidth) {
@@ -84,15 +92,18 @@ class WrappeableText {
 function wordWrapNonPrimitive(
   text: WrappeableText,
   columnWidth: ColumnWidth
-): string {
+): WrappeableText {
   if (text.fitsIn(columnWidth)) {
-    return text.value();
+    return text;
   }
 
   const wrappedText = text.wrappedText(columnWidth);
   const unwrappedText = text.unwrappedText(columnWidth);
   return wrappedText.concat(
-    wordWrapNonPrimitive(WrappeableText.create(unwrappedText), columnWidth)
+    wordWrapNonPrimitive(
+      WrappeableText.create(unwrappedText.value()),
+      columnWidth
+    )
   );
 }
 
