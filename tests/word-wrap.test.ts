@@ -9,31 +9,8 @@ wordWrap(' abcdf',4) ⇒ '\nabcd\nf'
 wordWrap(null,5) ⇒ ''
 wordWrap('hello',-5) ⇒ throw exception
 */
-function wordWrapOld(
-  text: string | null | undefined,
-  columnWidth: number
-): string {
-  if (columnWidth < 0) {
-    throw new Error("Negative column width is not allowed");
-  }
-  if (!text) {
-    return "";
-  }
-  if (text.length <= columnWidth) {
-    return text;
-  }
 
-  const wrapIndex = getWrapIndex(text, columnWidth);
-  const unwrapIndex = getUnwrapIndex(text, columnWidth);
-  const wrappedText = text.substring(0, wrapIndex).concat("\n");
-  const unwrappedText = text.substring(unwrapIndex);
-  return wrappedText.concat(wordWrap(unwrappedText, columnWidth));
-}
-
-function wordWrap(
-  text: string,
-  columnWidth: number
-): string {
+function wordWrap(text: string, columnWidth: number): string {
   return wordWrapNonPrimitive(
     WrappeableText.create(text),
     ColumnWidth.create(columnWidth)
@@ -69,18 +46,34 @@ class WrappeableText {
     return this.value().length <= columnWidth.value();
   }
 
-  wrapIndex(columnWidth: ColumnWidth) {
-    const indexOfSpace = this.value().indexOf(" ");
-    const shallWrapBySpace =
-      indexOfSpace > -1 && indexOfSpace < columnWidth.value();
-    return shallWrapBySpace ? indexOfSpace : columnWidth.value();
+  wrappedText(columnWidth: ColumnWidth) {
+    return this.value().substring(0, this.wrapIndex(columnWidth)).concat("\n");
   }
 
-  unwrapIndex(columnWidth: ColumnWidth) {
-    const indexOfSpace = this.value().indexOf(" ");
-    const shallWrapBySpace =
-      indexOfSpace > -1 && indexOfSpace < columnWidth.value();
-    return shallWrapBySpace ? indexOfSpace + 1 : columnWidth.value();
+  unwrappedText(columnWidth: ColumnWidth) {
+    return this.value().substring(this.unwrapIndex(columnWidth));
+  }
+
+  private wrapIndex(columnWidth: ColumnWidth) {
+    return this.shallWrapBySpace(columnWidth)
+      ? this.indexOfSpace()
+      : columnWidth.value();
+  }
+
+  private unwrapIndex(columnWidth: ColumnWidth) {
+    return this.shallWrapBySpace(columnWidth)
+      ? this.indexOfSpace() + 1
+      : columnWidth.value();
+  }
+
+  private indexOfSpace() {
+    return this.value().indexOf(" ");
+  }
+
+  private shallWrapBySpace(columnWidth: ColumnWidth) {
+    return (
+      this.indexOfSpace() > -1 && this.indexOfSpace() < columnWidth.value()
+    );
   }
 
   value() {
@@ -96,25 +89,11 @@ function wordWrapNonPrimitive(
     return text.value();
   }
 
-  const wrapIndex = text.wrapIndex(columnWidth);
-  const unwrapIndex = text.unwrapIndex(columnWidth);
-  const wrappedText = text.value().substring(0, wrapIndex).concat("\n");
-  const unwrappedText = text.value().substring(unwrapIndex);
+  const wrappedText = text.wrappedText(columnWidth);
+  const unwrappedText = text.unwrappedText(columnWidth);
   return wrappedText.concat(
     wordWrapNonPrimitive(WrappeableText.create(unwrappedText), columnWidth)
   );
-}
-
-function getUnwrapIndex(text: string, columnWidth: number) {
-  const indexOfSpace = text.indexOf(" ");
-  const shallWrapBySpace = indexOfSpace > -1 && indexOfSpace < columnWidth;
-  return shallWrapBySpace ? indexOfSpace + 1 : columnWidth;
-}
-
-function getWrapIndex(text: string, columnWidth: number) {
-  const indexOfSpace = text.indexOf(" ");
-  const shallWrapBySpace = indexOfSpace > -1 && indexOfSpace < columnWidth;
-  return shallWrapBySpace ? indexOfSpace : columnWidth;
 }
 
 describe("The word wrap", () => {
