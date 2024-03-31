@@ -1,22 +1,3 @@
-/*
-wordWrap('',5) ⇒ ''
-wordWrap('hello',5) ⇒ 'hello'
-wordWrap('longword',4) ⇒ 'long\nword'
-wordWrap('reallylongword',4) ⇒ 'real\nlylo\nngwo\nrd'
-wordWrap('abc def',4) ⇒ 'abc\ndef' 
-wordWrap('abc def ghi',4) ⇒ 'abc\ndef\nghi'
-wordWrap(' abcdf',4) ⇒ '\nabcd\nf'
-wordWrap(null,5) ⇒ ''
-wordWrap('hello',-5) ⇒ throw exception
-*/
-
-function wordWrap(text: string, columnWidth: number): string {
-  return wordWrapNonPrimitive(
-    WrappeableText.create(text),
-    ColumnWidth.create(columnWidth)
-  ).value();
-}
-
 class ColumnWidth {
   private constructor(private readonly width: number) {}
 
@@ -42,24 +23,35 @@ class WrappeableText {
     return new WrappeableText(text);
   }
 
-  fitsIn(columnWidth: ColumnWidth): boolean {
-    return this.value().length <= columnWidth.value();
-  }
-
-  wrappedText(columnWidth: ColumnWidth) {
-    return WrappeableText.create(
-      this.value().substring(0, this.wrapIndex(columnWidth)).concat("\n")
+  wordWrap(columnWidth: ColumnWidth) {
+    if (this.fitsIn(columnWidth)) {
+      return WrappeableText.create(this.text);
+    }
+    const wrappedText = this.wrappedText(columnWidth);
+    const unwrappedText = this.unwrappedText(columnWidth);
+    return wrappedText.concat(
+      WrappeableText.create(unwrappedText.text).wordWrap(columnWidth)
     );
   }
 
-  unwrappedText(columnWidth: ColumnWidth) {
+  private fitsIn(columnWidth: ColumnWidth): boolean {
+    return this.text.length <= columnWidth.value();
+  }
+
+  private wrappedText(columnWidth: ColumnWidth) {
     return WrappeableText.create(
-      this.value().substring(this.unwrapIndex(columnWidth))
+      this.text.substring(0, this.wrapIndex(columnWidth)).concat("\n")
     );
   }
 
-  concat(text: WrappeableText): WrappeableText {
-    return WrappeableText.create(this.value().concat(text.value()));
+  private unwrappedText(columnWidth: ColumnWidth) {
+    return WrappeableText.create(
+      this.text.substring(this.unwrapIndex(columnWidth))
+    );
+  }
+
+  private concat(text: WrappeableText): WrappeableText {
+    return WrappeableText.create(this.text.concat(text.text));
   }
 
   private wrapIndex(columnWidth: ColumnWidth) {
@@ -75,7 +67,7 @@ class WrappeableText {
   }
 
   private indexOfSpace() {
-    return this.value().indexOf(" ");
+    return this.text.indexOf(" ");
   }
 
   private shallWrapBySpace(columnWidth: ColumnWidth) {
@@ -83,55 +75,53 @@ class WrappeableText {
       this.indexOfSpace() > -1 && this.indexOfSpace() < columnWidth.value()
     );
   }
-
-  value() {
-    return this.text;
-  }
-}
-
-function wordWrapNonPrimitive(
-  text: WrappeableText,
-  columnWidth: ColumnWidth
-): WrappeableText {
-  if (text.fitsIn(columnWidth)) {
-    return text;
-  }
-
-  const wrappedText = text.wrappedText(columnWidth);
-  const unwrappedText = text.unwrappedText(columnWidth);
-  return wrappedText.concat(
-    wordWrapNonPrimitive(
-      WrappeableText.create(unwrappedText.value()),
-      columnWidth
-    )
-  );
 }
 
 describe("The word wrap", () => {
   it("small texts does not need to be wrapped", () => {
-    expect(wordWrap("hello", 5)).toBe("hello");
+    expect(
+      WrappeableText.create("hello").wordWrap(ColumnWidth.create(5))
+    ).toEqual({ text: "hello" });
   });
 
   it("words are wrapped when do not fit with the column width", () => {
-    expect(wordWrap("longword", 4)).toBe("long\nword");
-    expect(wordWrap("reallylongword", 4)).toBe("real\nlylo\nngwo\nrd");
+    expect(
+      WrappeableText.create("longword").wordWrap(ColumnWidth.create(4))
+    ).toEqual({ text: "long\nword" });
+    expect(
+      WrappeableText.create("reallylongword").wordWrap(ColumnWidth.create(4))
+    ).toEqual({
+      text: "real\nlylo\nngwo\nrd",
+    });
   });
 
   it("spaces are preferred for wrapping", () => {
-    expect(wordWrap("abc def", 4)).toBe("abc\ndef");
-    expect(wordWrap("abc def ghi", 4)).toBe("abc\ndef\nghi");
-    expect(wordWrap(" abcd", 4)).toBe("\nabcd");
+    expect(
+      WrappeableText.create("abc def").wordWrap(ColumnWidth.create(4))
+    ).toEqual({ text: "abc\ndef" });
+    expect(
+      WrappeableText.create("abc def ghi").wordWrap(ColumnWidth.create(4))
+    ).toEqual({ text: "abc\ndef\nghi" });
+    expect(
+      WrappeableText.create(" abcd").wordWrap(ColumnWidth.create(4))
+    ).toEqual({ text: "\nabcd" });
   });
 
   it("empty text does not need to be wrapped", () => {
-    expect(wordWrap("", 5)).toBe("");
-    expect(wordWrap(null, 4)).toBe("");
-    expect(wordWrap(undefined, 4)).toBe("");
+    expect(WrappeableText.create("").wordWrap(ColumnWidth.create(5))).toEqual({
+      text: "",
+    });
+    expect(WrappeableText.create(null).wordWrap(ColumnWidth.create(4))).toEqual(
+      { text: "" }
+    );
+    expect(
+      WrappeableText.create(undefined).wordWrap(ColumnWidth.create(4))
+    ).toEqual({ text: "" });
   });
 
   it("does not allow for negative column width", () => {
-    expect(() => wordWrap("irrelevant-text", -1)).toThrow(
-      "Negative column width is not allowed"
-    );
+    expect(() =>
+      WrappeableText.create("irrelevant-text").wordWrap(ColumnWidth.create(-1))
+    ).toThrow("Negative column width is not allowed");
   });
 });
