@@ -1,4 +1,4 @@
-import { StatementPrinter } from "./StatementPrinter";
+import { StatementPrinter } from "./statement-printer";
 import { TransactionRepository } from "./TransactionRepository";
 
 export class Account {

@@ -1,15 +1,15 @@
 import { Clock } from "../../../src/banking-account/Clock";
-import { StatementPrinter } from "../../../src/banking-account/StatementPrinter";
+import { StatementPrinter } from "../../../src/banking-account/statement-printer";
 import { TransactionRepository } from "../../../src/banking-account/TransactionRepository";
 import { Account } from "./../../../src/banking-account/Account";
 import { Console } from "./../../../src/banking-account/Console";
 
 describe("Print statement", () => {
   const console = new Console();
-  const repository = new TransactionRepository(new Clock());
-  const statementPrinter = new StatementPrinter();
-  const account = new Account(repository, statementPrinter);
   const consoleSpy = jest.spyOn(console, "log");
+  const repository = new TransactionRepository(new Clock());
+  const statementPrinter = new StatementPrinter(console);
+  const account = new Account(repository, statementPrinter);
 
   it("print an account statements including the transactions made through the console", () => {
     account.deposit(1000);
