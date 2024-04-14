@@ -1,11 +1,14 @@
+import { TransactionRepository } from "../../../src/banking-account/TransactionRepository";
 import { Account } from "./../../../src/banking-account/Account";
 import { Console } from "./../../../src/banking-account/Console";
 
 describe("Print statement", () => {
   const console = new Console();
-  let consoleSpy = jest.spyOn(console, "log");
+  const repository = new TransactionRepository();
+  const account = new Account(repository);
+  const consoleSpy = jest.spyOn(console, "log");
+
   it("print an account statements including the transactions made through the console", () => {
-    let account = new Account();
     account.deposit(1000);
     account.withdraw(500);
     account.deposit(2000);
