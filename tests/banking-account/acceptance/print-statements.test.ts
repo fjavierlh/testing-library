@@ -1,3 +1,4 @@
+import { StatementPrinter } from "../../../src/banking-account/StatementPrinter";
 import { TransactionRepository } from "../../../src/banking-account/TransactionRepository";
 import { Account } from "./../../../src/banking-account/Account";
 import { Console } from "./../../../src/banking-account/Console";
@@ -5,7 +6,8 @@ import { Console } from "./../../../src/banking-account/Console";
 describe("Print statement", () => {
   const console = new Console();
   const repository = new TransactionRepository();
-  const account = new Account(repository);
+  const statementPrinter = new StatementPrinter();
+  const account = new Account(repository, statementPrinter);
   const consoleSpy = jest.spyOn(console, "log");
 
   it("print an account statements including the transactions made through the console", () => {
