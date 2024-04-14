@@ -1,5 +1,11 @@
+import { TransactionRepository } from "./TransactionRepository";
+
 export class Account {
-  withdraw(quantity: number) { }
-  deposit(quantity: number) { }
-  printStatement() { }
+  constructor(private repository: TransactionRepository) {}
+
+  withdraw(amount: number): void {}
+  deposit(amount: number): void {
+    this.repository.addDeposit(amount);
+  }
+  printStatement(): void {}
 }
