@@ -14,6 +14,7 @@ export class Account {
   deposit(amount: number): void {
     this.repository.addDeposit(amount);
   }
+
   printStatement(): void {
     this.statementPrinter.print(this.repository.allTransactions());
   }
