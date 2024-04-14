@@ -1,3 +1,4 @@
+import { Clock } from "../../../src/banking-account/Clock";
 import { StatementPrinter } from "../../../src/banking-account/StatementPrinter";
 import { TransactionRepository } from "../../../src/banking-account/TransactionRepository";
 import { Account } from "./../../../src/banking-account/Account";
@@ -5,7 +6,7 @@ import { Console } from "./../../../src/banking-account/Console";
 
 describe("Print statement", () => {
   const console = new Console();
-  const repository = new TransactionRepository();
+  const repository = new TransactionRepository(new Clock());
   const statementPrinter = new StatementPrinter();
   const account = new Account(repository, statementPrinter);
   const consoleSpy = jest.spyOn(console, "log");
