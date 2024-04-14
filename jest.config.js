@@ -6,6 +6,7 @@ module.exports = {
   modulePathIgnorePatterns: ["<rootDir>/lib"],
   collectCoverage: true,
   coverageDirectory: "./coverage",
+  clearMocks: true,
   coverageThreshold: {
     global: {
       statements: 50,
