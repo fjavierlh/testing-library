@@ -9,10 +9,10 @@ export class StatementPrinter {
   print(transactions: Transaction[]) {
     this.console.log(this.header);
     if (transactions.length > 0) {
+      const transaction = transactions[0];
+      const formattedAmount = transaction.amount.toFixed(2);
       this.console.log(
-        `${transactions[0].date} | ${transactions[0].amount.toFixed(
-          2
-        )} | ${transactions[0].amount.toFixed(2)}`
+        `${transaction.date} | ${formattedAmount} | ${formattedAmount}`
       );
     }
   }
